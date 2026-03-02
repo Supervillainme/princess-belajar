@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#9B72CF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Princess Belajar">
+<title>🌈 Princess Belajar!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root{
+  --pink:#FF6BB0;--pink-l:#FFB8D9;
+  --pur:#9B72CF;--pur-l:#D4B8F0;
+  --mint:#5DD9C1;--yel:#FFD166;--org:#FF9A3C;--red:#FF6B6B;
+  --gold:#F5A623;--teal:#00BFA5;
+  --bg:#FFF0FA;--txt:#3D2C5E;--txt-l:#8B7BAA;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-l:env(safe-area-inset-left,0px);
+  --safe-r:env(safe-area-inset-right,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none;}
+html,body{height:100%;width:100%;margin:0;padding:0;font-family:'Nunito',sans-serif;background:var(--bg);-webkit-text-size-adjust:100%;}
+
+/* App wrapper — explicit height so iframe knows how tall to be */
+#app{
+  position:relative;
+  width:100%;
+  height:900px;
+  overflow:hidden;
+  font-family:'Nunito',sans-serif;
+}
+
+/* ── SCREENS ── */
+.screen{
+  display:none;
+  position:absolute;
+  top:0; left:0; right:0;
+  height:900px;
+  flex-direction:column;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-y:contain;
+  z-index:1;
+  padding-left:var(--safe-l);
+  padding-right:var(--safe-r);
+}
+.screen.active{display:flex;}
+.screen::-webkit-scrollbar{display:none;}
+
+/* ── BUBBLES ── */
+#bgB{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;height:900px;}
+.bub{position:absolute;border-radius:50%;opacity:.07;animation:rise linear infinite;}
+@keyframes rise{0%{transform:translateY(105vh) scale(.6);opacity:0}8%{opacity:.07}92%{opacity:.07}100%{transform:translateY(-10vh) scale(1.3);opacity:0}}
+
+/* ── HOME ── */
+#home{background:linear-gradient(160deg,#FFE0F5 0%,#E8D5FF 55%,#D5F0FF 100%);align-items:center;padding-top:calc(var(--safe-t) + 24px);padding-bottom:calc(var(--safe-b) + 24px);}
+.hero{font-size:clamp(65px,18vw,95px);animation:bop 2s ease-in-out infinite;line-height:1;}
+@keyframes bop{0%,100%{transform:translateY(0)}50%{transform:translateY(-13px)}}
+.htitle{font-family:'Fredoka One',cursive;font-size:clamp(1.9rem,7.5vw,2.9rem);color:var(--pur);text-align:center;line-height:1.1;margin:8px 0 4px;text-shadow:3px 3px 0 rgba(155,114,207,.18);}
+.hsub{color:var(--txt-l);font-size:clamp(.85rem,3.5vw,1rem);text-align:center;margin-bottom:18px;}
+.streak-pill{background:linear-gradient(135deg,var(--yel),var(--org));color:#fff;padding:8px 20px;border-radius:30px;font-family:'Fredoka One',cursive;font-size:clamp(.9rem,3.8vw,1.05rem);box-shadow:0 4px 14px rgba(255,154,60,.4);margin-bottom:16px;}
+.stats{display:flex;gap:9px;width:min(93%,380px);margin-bottom:16px;}
+.sc{flex:1;background:#fff;border-radius:16px;padding:11px 7px;text-align:center;box-shadow:0 4px 12px rgba(155,114,207,.13);border-bottom:4px solid var(--pur-l);}
+.sn{font-family:'Fredoka One',cursive;font-size:clamp(1.4rem,5.5vw,1.9rem);color:var(--pur);}
+.sl{font-size:clamp(.6rem,2.3vw,.7rem);color:var(--txt-l);font-weight:800;}
+.xpw{width:min(93%,380px);margin-bottom:18px;}
+.xpr{display:flex;justify-content:space-between;font-size:.78rem;color:var(--txt-l);font-weight:800;margin-bottom:5px;}
+.xpt{background:#fff;border-radius:20px;height:14px;overflow:hidden;border:2px solid var(--pur-l);}
+.xpf{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--pink),var(--yel));transition:width 1s ease;}
+
+/* EXAM BUTTON on home */
+.btn-exam{
+  width:min(93%,380px);min-height:60px;padding:0 16px;
+  background:linear-gradient(135deg,#FF6B35,#F7C59F,#EFEFD0,#90D7D7,#FF6B35);
+  background-size:300% 300%;animation:examShimmer 4s ease infinite;
+  color:var(--txt);font-family:'Fredoka One',cursive;font-size:clamp(1rem,4.2vw,1.2rem);
+  border:none;border-radius:22px;cursor:pointer;
+  box-shadow:0 6px 0 #B0490F,0 10px 24px rgba(255,107,53,.3);
+  transition:transform .08s,box-shadow .08s;margin-bottom:12px;
+  position:relative;display:flex;align-items:center;justify-content:center;gap:8px;
+  touch-action:manipulation;
+}
+@keyframes examShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.btn-exam:active{transform:translateY(4px);box-shadow:0 2px 0 #B0490F;}
+.exam-badge{
+  position:absolute;top:-8px;right:-6px;
+  background:#FF3B30;color:#fff;border-radius:12px;padding:3px 8px;
+  font-size:.65rem;font-weight:800;font-family:'Nunito',sans-serif;
+  border:2px solid #fff;white-space:nowrap;
+}
+
+/* ── SHARED BUTTONS ── */
+.btnM{width:min(93%,380px);min-height:56px;padding:0 20px;font-family:'Fredoka One',cursive;font-size:clamp(1rem,4.3vw,1.3rem);color:#fff;background:linear-gradient(135deg,var(--pink),var(--pur));border:none;border-radius:22px;cursor:pointer;box-shadow:0 6px 0 #7A50A8,0 10px 20px rgba(155,114,207,.28);transition:transform .08s,box-shadow .08s;margin-bottom:12px;touch-action:manipulation;}
+.btnM:active{transform:translateY(4px);box-shadow:0 2px 0 #7A50A8;}
+.btnS{width:min(93%,380px);min-height:50px;padding:0 20px;font-family:'Fredoka One',cursive;font-size:clamp(.92rem,3.8vw,1.1rem);color:var(--pur);background:#fff;border:3px solid var(--pur-l);border-radius:18px;cursor:pointer;box-shadow:0 4px 0 var(--pur-l);transition:transform .08s,box-shadow .08s;margin-bottom:10px;touch-action:manipulation;}
+.btnS:active{transform:translateY(3px);box-shadow:none;}
+
+/* ── LESSON ── */
+#lesson{background:var(--bg);}
+.topbar{position:sticky;top:0;z-index:10;padding:calc(var(--safe-t) + 10px) 14px 10px;display:flex;align-items:center;gap:10px;background:#fff;box-shadow:0 2px 12px rgba(155,114,207,.1);flex-shrink:0;}
+.backbtn{min-width:44px;min-height:44px;background:var(--pur-l);border:none;border-radius:12px;font-size:1.2rem;cursor:pointer;color:var(--pur);display:flex;align-items:center;justify-content:center;touch-action:manipulation;}
+.pw{flex:1;}
+.pt{background:#EEE;border-radius:20px;height:12px;overflow:hidden;}
+.pf{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--mint),var(--pur));transition:width .4s ease;}
+.ptxt{font-size:.7rem;color:var(--txt-l);font-weight:800;margin-top:3px;}
+.hts{font-size:1.2rem;white-space:nowrap;}
+.lscroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:14px 0 0;display:flex;flex-direction:column;align-items:center;}
+.lscroll::-webkit-scrollbar{display:none;}
+.wcard{width:min(93%,420px);background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 8px 26px rgba(155,114,207,.18);border:3px solid var(--pur-l);margin-bottom:14px;}
+.wimg{width:100%;height:clamp(135px,38vw,195px);object-fit:cover;display:block;}
+.wph{width:100%;height:clamp(135px,38vw,195px);display:flex;align-items:center;justify-content:center;font-size:clamp(58px,16vw,88px);background:linear-gradient(135deg,#FFE0F5,#E8D5FF);}
+.wbody{padding:14px 16px;}
+.wbdg{display:inline-block;padding:3px 11px;border-radius:20px;font-size:.7rem;font-weight:800;margin-bottom:7px;}
+.bnew{background:#FFF0FA;color:var(--pink);border:2px solid var(--pink-l);}
+.brec{background:#F0F5FF;color:var(--pur);border:2px solid var(--pur-l);}
+.mw{font-family:'Fredoka One',cursive;font-size:clamp(2rem,8.5vw,2.9rem);color:var(--pur);line-height:1;}
+.mt{font-size:clamp(1rem,4.2vw,1.3rem);color:var(--txt-l);font-style:italic;margin:4px 0 9px;}
+.sl2{font-size:.68rem;color:var(--txt-l);font-weight:800;margin-bottom:3px;}
+.sb{background:linear-gradient(135deg,#E8FFFB,#D5F0FF);border:2px dashed var(--mint);border-radius:13px;padding:9px 12px;font-size:clamp(.86rem,3.4vw,.98rem);color:var(--txt);line-height:1.5;}
+.lact{flex-shrink:0;padding:10px 14px calc(var(--safe-b) + 10px);background:var(--bg);display:flex;gap:10px;width:100%;}
+.spkbtn{flex:1;min-height:52px;background:linear-gradient(135deg,var(--mint),#30C5AF);color:#fff;border:none;border-radius:17px;font-family:'Fredoka One',cursive;font-size:clamp(.92rem,3.8vw,1.02rem);cursor:pointer;box-shadow:0 5px 0 #25A090;transition:transform .08s,box-shadow .08s;touch-action:manipulation;}
+.spkbtn:active{transform:translateY(4px);box-shadow:none;}
+.nxtbtn{flex:2;min-height:52px;background:linear-gradient(135deg,var(--pink),#E0509A);color:#fff;border:none;border-radius:17px;font-family:'Fredoka One',cursive;font-size:clamp(.92rem,3.8vw,1.1rem);cursor:pointer;box-shadow:0 5px 0 #C03880;transition:transform .08s,box-shadow .08s;touch-action:manipulation;}
+.nxtbtn:active{transform:translateY(4px);box-shadow:none;}
+
+/* ── QUIZ ── */
+#quiz{background:linear-gradient(160deg,#F5E6FF 0%,#FFE6F5 100%);}
+.qtop{flex-shrink:0;text-align:center;padding:calc(var(--safe-t) + 12px) 16px 8px;}
+.qmas{font-size:clamp(46px,12vw,66px);animation:wiggle 1.2s ease-in-out infinite;line-height:1;}
+@keyframes wiggle{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.qtitle{font-family:'Fredoka One',cursive;font-size:clamp(1.3rem,5.5vw,1.7rem);color:var(--pur);}
+.qbw{width:min(280px,80vw);margin:8px auto 0;}
+.qscroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 0 10px;display:flex;flex-direction:column;align-items:center;}
+.qscroll::-webkit-scrollbar{display:none;}
+.qword{font-family:'Fredoka One',cursive;font-size:clamp(2.2rem,9.5vw,3.3rem);color:var(--pink);text-align:center;margin:13px 0 3px;}
+.qqtxt{font-size:clamp(.9rem,3.8vw,1.1rem);color:var(--txt);font-weight:800;text-align:center;margin-bottom:15px;}
+.qopts{width:min(93%,420px);}
+.qopt{width:100%;min-height:54px;padding:0 15px;background:#fff;border:3px solid #E8E0F5;border-radius:16px;font-size:clamp(.95rem,3.8vw,1.12rem);font-weight:800;color:var(--txt);cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 #E0D5F0;touch-action:manipulation;text-align:center;transition:background .12s,border-color .12s;}
+.qopt.ok{background:#EFFFEF;border-color:#5DD96A;box-shadow:0 4px 0 #35B040;color:#2A7830;}
+.qopt.no{background:#FFF0F0;border-color:var(--red);box-shadow:0 4px 0 #C04040;color:#A03030;}
+
+/* feedback */
+.fbo{position:absolute;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .18s;}
+.fbo.on{opacity:1;}
+.fbm{font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,7.5vw,2.9rem);text-align:center;animation:pop .3s ease;background:rgba(255,255,255,.9);padding:13px 28px;border-radius:22px;box-shadow:0 8px 28px rgba(0,0,0,.12);}
+@keyframes pop{0%{transform:scale(.5)}65%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+/* ── REWARD ── */
+#reward{background:linear-gradient(160deg,#FFE0F5 0%,#E8D5FF 55%,#D5FFE8 100%);align-items:center;padding-top:calc(var(--safe-t) + 26px);padding-bottom:calc(var(--safe-b) + 26px);}
+.troph{font-size:clamp(65px,19vw,95px);animation:bop 1s ease-in-out infinite;}
+.rtitle{font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,7.5vw,2.4rem);color:var(--pur);margin:8px 0 4px;text-align:center;}
+.rsub{font-size:clamp(.85rem,3.3vw,1rem);color:var(--txt-l);margin-bottom:14px;text-align:center;}
+.rbox{background:#fff;border-radius:22px;padding:15px 36px;box-shadow:0 8px 24px rgba(155,114,207,.18);margin-bottom:12px;text-align:center;}
+.rbig{font-family:'Fredoka One',cursive;font-size:clamp(2.6rem,10vw,3.6rem);color:var(--pink);}
+.rlbl{font-size:.83rem;color:var(--txt-l);font-weight:800;}
+.rstr{font-size:clamp(1.6rem,6.5vw,2.3rem);margin-bottom:14px;}
+.rwbox{width:min(93%,380px);background:#fff;border-radius:20px;padding:12px;box-shadow:0 4px 14px rgba(155,114,207,.13);margin-bottom:13px;text-align:left;}
+.rwbox h3{font-family:'Fredoka One',cursive;color:var(--pur);font-size:.96rem;margin-bottom:7px;}
+.chip{display:inline-block;background:var(--pur-l);color:var(--pur);padding:4px 10px;border-radius:13px;font-size:.76rem;font-weight:800;margin:3px;}
+.savetxt{font-size:.84rem;color:var(--txt-l);margin-bottom:12px;}
+
+/* ── PROGRESS ── */
+#progress{background:var(--bg);}
+.phdr{flex-shrink:0;padding:calc(var(--safe-t) + 18px) 20px 18px;background:linear-gradient(135deg,var(--pur),var(--pink));text-align:center;color:#fff;}
+.phdr h2{font-family:'Fredoka One',cursive;font-size:clamp(1.5rem,5.5vw,1.9rem);}
+.phdr p{opacity:.85;font-size:.86rem;}
+.pscroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:14px 0 8px;display:flex;flex-direction:column;align-items:center;}
+.pscroll::-webkit-scrollbar{display:none;}
+.csec{width:min(93%,420px);background:#fff;border-radius:22px;padding:16px;box-shadow:0 5px 18px rgba(155,114,207,.13);margin-bottom:12px;}
+.stitle{font-family:'Fredoka One',cursive;font-size:1.08rem;color:var(--pur);margin-bottom:12px;}
+.bchart{display:flex;align-items:flex-end;gap:7px;height:106px;margin-bottom:5px;}
+.bw2{flex:1;display:flex;flex-direction:column;align-items:center;}
+.bw2 .bb{width:100%;border-radius:7px 7px 0 0;background:linear-gradient(180deg,var(--pink),var(--pur));min-height:3px;transition:height .8s ease;}
+.bw2 .bl{font-size:clamp(.5rem,2vw,.62rem);color:var(--txt-l);font-weight:800;margin-top:4px;text-align:center;}
+.agrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.acard{background:#fff;border-radius:16px;padding:12px 8px;text-align:center;box-shadow:0 3px 10px rgba(155,114,207,.1);border-top:4px solid var(--pur-l);opacity:.35;transition:opacity .3s,border-color .3s;}
+.acard.on{opacity:1;border-top-color:var(--yel);}
+.aic{font-size:1.8rem;margin-bottom:3px;}
+.anm{font-size:.74rem;font-weight:800;color:var(--txt);}
+.adc{font-size:.64rem;color:var(--txt-l);margin-top:2px;}
+.vi{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #F5EEF8;}
+.vi:last-child{border-bottom:none;}
+.vw{font-weight:800;color:var(--txt);font-size:.91rem;}
+.vt{color:var(--txt-l);font-size:.8rem;}
+.vs{font-size:1.1rem;}
+
+/* ══════════════════════════════════════════
+   EXAM SCREENS
+══════════════════════════════════════════ */
+
+/* EXAM HOME */
+#exam-home{
+  background:linear-gradient(160deg,#FFF3E0 0%,#FFE0B2 40%,#E8F5E9 100%);
+  align-items:center;
+  padding-top:calc(var(--safe-t) + 20px);
+  padding-bottom:calc(var(--safe-b) + 24px);
+}
+.exam-banner{
+  width:min(93%,420px);
+  background:linear-gradient(135deg,#FF6B35,#F5A623);
+  border-radius:24px;padding:18px;
+  text-align:center;color:#fff;
+  box-shadow:0 8px 24px rgba(255,107,53,.3);
+  margin-bottom:16px;
+}
+.exam-banner .etitle{font-family:'Fredoka One',cursive;font-size:clamp(1.5rem,6vw,1.9rem);}
+.exam-banner .esub{font-size:.88rem;opacity:.9;margin-top:4px;}
+.countdown-box{
+  background:rgba(255,255,255,.25);
+  border-radius:14px;padding:10px 16px;margin-top:12px;
+  display:inline-flex;gap:14px;
+}
+.cd-unit{text-align:center;}
+.cd-num{font-family:'Fredoka One',cursive;font-size:1.8rem;line-height:1;}
+.cd-lbl{font-size:.65rem;font-weight:800;opacity:.85;text-transform:uppercase;letter-spacing:.05em;}
+
+.topic-cards{width:min(93%,420px);display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.topic-card{
+  background:#fff;border-radius:18px;padding:13px 16px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 4px 14px rgba(0,0,0,.08);
+  border-left:6px solid;
+}
+.tc1{border-color:#FF6BB0;}
+.tc2{border-color:#9B72CF;}
+.tc3{border-color:#5DD9C1;}
+.tc-icon{font-size:1.8rem;flex-shrink:0;}
+.tc-name{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--txt);}
+.tc-sub{font-size:.72rem;color:var(--txt-l);margin-top:2px;}
+
+.exam-stats-row{display:flex;gap:10px;width:min(93%,420px);margin-bottom:16px;}
+.exam-stat{flex:1;background:#fff;border-radius:16px;padding:11px 8px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.07);border-bottom:4px solid #FFE0B2;}
+.exam-stat .sn{color:var(--org);}
+
+.btn-exam-start{
+  width:min(93%,420px);min-height:60px;
+  background:linear-gradient(135deg,#FF6B35,#F5A623);
+  color:#fff;font-family:'Fredoka One',cursive;
+  font-size:clamp(1.1rem,4.5vw,1.35rem);
+  border:none;border-radius:22px;cursor:pointer;
+  box-shadow:0 6px 0 #C04800,0 10px 22px rgba(255,107,53,.35);
+  transition:transform .08s,box-shadow .08s;
+  touch-action:manipulation;margin-bottom:10px;
+}
+.btn-exam-start:active{transform:translateY(4px);box-shadow:0 2px 0 #C04800;}
+
+.expired-box{
+  background:#fff;border-radius:20px;padding:20px;
+  text-align:center;width:min(93%,420px);
+  box-shadow:0 4px 16px rgba(0,0,0,.08);
+  margin-bottom:16px;
+}
+.expired-box .ei{font-size:3rem;margin-bottom:8px;}
+.expired-box h3{font-family:'Fredoka One',cursive;color:var(--txt);margin-bottom:6px;}
+.expired-box p{color:var(--txt-l);font-size:.88rem;}
+
+/* EXAM QUIZ */
+#exam-quiz{background:linear-gradient(160deg,#FFF3E0 0%,#FFE8D5 100%);}
+.eq-topbar{
+  position:sticky;top:0;z-index:10;
+  padding:calc(var(--safe-t) + 10px) 14px 10px;
+  display:flex;align-items:center;gap:10px;
+  background:#fff;box-shadow:0 2px 12px rgba(255,107,53,.1);
+  flex-shrink:0;
+}
+.eq-pf{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--org),var(--yel));transition:width .4s ease;}
+.eq-badge{
+  background:linear-gradient(135deg,#FF6B35,#F5A623);
+  color:#fff;padding:5px 12px;border-radius:20px;
+  font-family:'Fredoka One',cursive;font-size:.82rem;
+  white-space:nowrap;
+}
+.eq-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:14px 0 10px;display:flex;flex-direction:column;align-items:center;}
+.eq-scroll::-webkit-scrollbar{display:none;}
+
+/* Question card */
+.eq-card{
+  width:min(93%,420px);background:#fff;border-radius:22px;
+  padding:18px;box-shadow:0 6px 22px rgba(255,107,53,.15);
+  border:3px solid #FFD9B3;margin-bottom:14px;
+}
+.eq-type-badge{
+  display:inline-block;padding:4px 12px;border-radius:20px;
+  font-size:.72rem;font-weight:800;margin-bottom:10px;
+  background:#FFF3E0;color:var(--org);border:2px solid #FFD9B3;
+}
+.eq-question{font-family:'Fredoka One',cursive;font-size:clamp(1.3rem,5.5vw,1.7rem);color:var(--txt);line-height:1.3;margin-bottom:4px;}
+.eq-hint{font-size:.82rem;color:var(--txt-l);margin-bottom:14px;font-style:italic;}
+
+/* MCQ options in exam */
+.eq-opts{display:flex;flex-direction:column;gap:9px;}
+.eq-opt{
+  min-height:52px;padding:0 14px;
+  background:#FFF8F0;border:3px solid #FFD9B3;
+  border-radius:14px;font-size:clamp(.95rem,3.8vw,1.1rem);
+  font-weight:800;color:var(--txt);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;box-shadow:0 4px 0 #FFD9B3;
+  transition:background .12s,border-color .12s;
+  touch-action:manipulation;
+}
+.eq-opt.ok{background:#EFFFEF;border-color:#5DD96A;box-shadow:0 4px 0 #35B040;color:#2A7830;}
+.eq-opt.no{background:#FFF0F0;border-color:var(--red);box-shadow:0 4px 0 #C04040;color:#A03030;}
+
+/* True/False */
+.tf-row{display:flex;gap:12px;}
+.tf-btn{
+  flex:1;min-height:64px;border:3px solid #FFD9B3;border-radius:16px;
+  background:#FFF8F0;font-family:'Fredoka One',cursive;
+  font-size:clamp(1.1rem,4.5vw,1.3rem);cursor:pointer;
+  box-shadow:0 5px 0 #FFD9B3;transition:transform .08s,box-shadow .08s;
+  touch-action:manipulation;
+}
+.tf-btn:active:not(.ok):not(.no){transform:translateY(3px);box-shadow:0 2px 0 #FFD9B3;}
+.tf-btn.ok{background:#EFFFEF;border-color:#5DD96A;box-shadow:0 4px 0 #35B040;color:#2A7830;}
+.tf-btn.no{background:#FFF0F0;border-color:var(--red);box-shadow:0 4px 0 #C04040;color:#A03030;}
+
+/* Scramble */
+.scramble-answer{
+  min-height:50px;background:#F5F0FF;border:2px dashed var(--pur-l);
+  border-radius:14px;padding:10px;display:flex;flex-wrap:wrap;gap:6px;
+  align-items:center;margin-bottom:12px;
+}
+.scramble-answer.has-word{border-style:solid;border-color:var(--pur);}
+.letter-tiles{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.ltile{
+  min-width:40px;height:44px;padding:0 10px;
+  background:#fff;border:3px solid var(--pur-l);border-radius:11px;
+  font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--pur);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 0 var(--pur-l);transition:transform .08s,opacity .15s;
+  touch-action:manipulation;
+}
+.ltile.used{opacity:.3;pointer-events:none;}
+.ltile.ans{background:var(--pur-l);border-color:var(--pur);cursor:pointer;}
+.scramble-btns{display:flex;gap:8px;margin-top:4px;}
+.scr-clr{
+  flex:1;min-height:42px;background:#FFF0F0;border:2px solid var(--red);
+  border-radius:12px;color:var(--red);font-family:'Fredoka One',cursive;
+  font-size:.95rem;cursor:pointer;touch-action:manipulation;
+}
+.scr-chk{
+  flex:2;min-height:42px;background:linear-gradient(135deg,var(--org),var(--yel));
+  border:none;border-radius:12px;color:#fff;font-family:'Fredoka One',cursive;
+  font-size:1rem;cursor:pointer;box-shadow:0 4px 0 #C04800;
+  transition:transform .08s,box-shadow .08s;touch-action:manipulation;
+}
+.scr-chk:active{transform:translateY(3px);box-shadow:0 1px 0 #C04800;}
+
+/* Topic sort */
+.topic-opts{display:flex;flex-direction:column;gap:9px;}
+.topic-opt{
+  min-height:52px;padding:0 14px;background:#FFF8F0;
+  border:3px solid #FFD9B3;border-radius:14px;
+  font-size:clamp(.95rem,3.8vw,1.05rem);font-weight:800;color:var(--txt);
+  cursor:pointer;display:flex;align-items:center;gap:10px;
+  box-shadow:0 4px 0 #FFD9B3;touch-action:manipulation;
+}
+.topic-opt.ok{background:#EFFFEF;border-color:#5DD96A;box-shadow:0 4px 0 #35B040;color:#2A7830;}
+.topic-opt.no{background:#FFF0F0;border-color:var(--red);box-shadow:0 4px 0 #C04040;color:#A03030;}
+
+/* ── EXAM REWARD ── */
+#exam-reward{
+  background:linear-gradient(160deg,#FFF3E0 0%,#FFE0B2 50%,#E8F5E9 100%);
+  align-items:center;
+  padding-top:calc(var(--safe-t) + 26px);
+  padding-bottom:calc(var(--safe-b) + 26px);
+}
+.exam-trophy{font-size:clamp(65px,18vw,95px);animation:bop 1s ease-in-out infinite;}
+.er-title{font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,7vw,2.4rem);color:#FF6B35;margin:8px 0 4px;text-align:center;}
+.er-sub{font-size:clamp(.84rem,3.3vw,.98rem);color:var(--txt-l);margin-bottom:14px;text-align:center;}
+.er-score{background:#fff;border-radius:22px;padding:15px 34px;box-shadow:0 8px 24px rgba(255,107,53,.2);margin-bottom:14px;text-align:center;}
+.er-score .rbig{color:#FF6B35;}
+.er-grade{
+  padding:8px 20px;border-radius:20px;font-family:'Fredoka One',cursive;
+  font-size:1.1rem;margin-bottom:16px;color:#fff;
+  box-shadow:0 4px 14px rgba(0,0,0,.15);
+}
+.btn-exam-main{
+  width:min(93%,380px);min-height:56px;
+  background:linear-gradient(135deg,#FF6B35,#F5A623);
+  color:#fff;font-family:'Fredoka One',cursive;font-size:clamp(1rem,4.2vw,1.25rem);
+  border:none;border-radius:22px;cursor:pointer;
+  box-shadow:0 6px 0 #C04800;transition:transform .08s,box-shadow .08s;
+  margin-bottom:12px;touch-action:manipulation;
+}
+.btn-exam-main:active{transform:translateY(4px);box-shadow:0 2px 0 #C04800;}
+
+/* confetti */
+.cf{position:absolute;border-radius:2px;pointer-events:none;z-index:999;animation:fall ease forwards;}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="bgB"></div>
+<div class="fbo" id="fbo"><div class="fbm" id="fbm"></div></div>
+
+<!-- ══════ HOME ══════ -->
+<div class="screen active" id="home">
+  <div class="hero">🦄</div>
+  <div class="htitle">Princess<br>Belajar!</div>
+  <div class="hsub">Belajar Bahasa Melayu setiap hari 🌟</div>
+  <div class="streak-pill" id="strk">🔥 Streak: 0 Hari</div>
+  <div class="stats">
+    <div class="sc"><div class="sn" id="hW">0</div><div class="sl">📚 Perkataan</div></div>
+    <div class="sc"><div class="sn" id="hS">0</div><div class="sl">⭐ Bintang</div></div>
+    <div class="sc"><div class="sn" id="hL">1</div><div class="sl">🏆 Level</div></div>
+  </div>
+  <div class="xpw">
+    <div class="xpr"><span>⚡ XP</span><span id="xpT">0 / 100</span></div>
+    <div class="xpt"><div class="xpf" id="xpB" style="width:0%"></div></div>
+  </div>
+
+  <!-- EXAM BUTTON -->
+  <button class="btn-exam" onclick="openExamHome()" id="examHomeBtn">
+    <span>📝</span>
+    <span>Peperiksaan Term 2!</span>
+    <span class="exam-badge" id="examDaysBadge">8 hari lagi</span>
+  </button>
+
+  <button class="btnM" onclick="startLesson()">🌈 Mula Belajar!</button>
+  <button class="btnS" onclick="openProg()">📊 Lihat Progress</button>
+</div>
+
+<!-- ══════ LESSON ══════ -->
+<div class="screen" id="lesson">
+  <div class="topbar">
+    <button class="backbtn" onclick="go('home')" aria-label="Balik">←</button>
+    <div class="pw">
+      <div class="pt"><div class="pf" id="lp" style="width:0%"></div></div>
+      <div class="ptxt" id="lpt">1 / 10</div>
+    </div>
+    <div class="hts" id="hts">❤️❤️❤️</div>
+  </div>
+  <div class="lscroll">
+    <div class="wcard">
+      <div class="wph" id="wph">🌟</div>
+      <img class="wimg" id="wi" src="" alt="" style="display:none"
+           onerror="this.style.display='none';document.getElementById('wph').style.display='flex'">
+      <div class="wbody">
+        <div id="wb" class="wbdg bnew">✨ Baru</div>
+        <div class="mw" id="ww">---</div>
+        <div class="mt" id="wtr">---</div>
+        <div class="sl2">📖 Contoh Ayat</div>
+        <div class="sb" id="ws">...</div>
+      </div>
+    </div>
+  </div>
+  <div class="lact">
+    <button class="spkbtn" onclick="spk()" aria-label="Sebut">🔊 Sebut</button>
+    <button class="nxtbtn" onclick="nxtL()">Seterusnya ➔</button>
+  </div>
+</div>
+
+<!-- ══════ QUIZ ══════ -->
+<div class="screen" id="quiz">
+  <div class="qtop">
+    <div class="qmas">🪄</div>
+    <div class="qtitle">Magic Quiz! ✨</div>
+    <div class="qbw">
+      <div class="pt"><div class="pf" id="qp" style="width:0%"></div></div>
+      <div class="ptxt" id="qpt" style="text-align:center">1 / 10</div>
+    </div>
+  </div>
+  <div class="qscroll">
+    <div class="qword" id="qw">---</div>
+    <div class="qqtxt" id="qq">Apa ertinya dalam Bahasa Inggeris?</div>
+    <div class="qopts" id="qo"></div>
+  </div>
+</div>
+
+<!-- ══════ REWARD ══════ -->
+<div class="screen" id="reward">
+  <div class="troph">🏆</div>
+  <div class="rtitle">Syabas, Princess!</div>
+  <div class="rsub">You are SO smart and wonderful! 💖</div>
+  <div class="rbox"><div class="rbig" id="rs">0/10</div><div class="rlbl">jawapan betul ✅</div></div>
+  <div class="rstr" id="rst">⭐⭐⭐</div>
+  <div class="rwbox"><h3>📚 Perkataan Hari Ini:</h3><div id="rc"></div></div>
+  <div class="savetxt" id="rsv">💾 Menyimpan...</div>
+  <button class="btnM" onclick="goHome()">🌈 Tamat!</button>
+</div>
+
+<!-- ══════ PROGRESS ══════ -->
+<div class="screen" id="progress">
+  <div class="phdr"><h2>📊 Progress Kamu</h2><p>Tengok semua pencapaian hebat!</p></div>
+  <div class="pscroll">
+    <div class="csec"><div class="stitle">📅 Skor 7 Hari Lepas</div><div class="bchart" id="wbars"></div></div>
+    <div class="csec"><div class="stitle">🏅 Pencapaian</div><div class="agrid" id="ag"></div></div>
+    <div class="csec"><div class="stitle">📖 Perkataan Dipelajari</div><div id="vl"></div></div>
+    <button class="btnS" style="width:min(93%,420px)" onclick="go('home')">← Balik</button>
+  </div>
+</div>
+
+<!-- ══════ EXAM HOME ══════ -->
+<div class="screen" id="exam-home">
+  <div class="exam-banner">
+    <div style="font-size:2.5rem;margin-bottom:4px;">📝</div>
+    <div class="etitle">Peperiksaan Akhir!</div>
+    <div class="esub">Grade 3 · Term 2 · Ms Elieanie</div>
+    <div class="countdown-box" id="cdBox">
+      <div class="cd-unit"><div class="cd-num" id="cdD">--</div><div class="cd-lbl">Hari</div></div>
+      <div class="cd-unit"><div class="cd-num" id="cdH">--</div><div class="cd-lbl">Jam</div></div>
+      <div class="cd-unit"><div class="cd-num" id="cdM">--</div><div class="cd-lbl">Minit</div></div>
+    </div>
+  </div>
+
+  <div class="topic-cards">
+    <div class="topic-card tc1">
+      <div class="tc-icon">🎂</div>
+      <div><div class="tc-name">Selamat Hari Jadi</div><div class="tc-sub">Birthday Celebration · 12 perkataan</div></div>
+    </div>
+    <div class="topic-card tc2">
+      <div class="tc-icon">🐾</div>
+      <div><div class="tc-name">Haiwan Kesayangan</div><div class="tc-sub">Pets · 13 perkataan</div></div>
+    </div>
+    <div class="topic-card tc3">
+      <div class="tc-icon">🚜</div>
+      <div><div class="tc-name">Di Ladang</div><div class="tc-sub">At the Farm · 13 perkataan</div></div>
+    </div>
+  </div>
+
+  <div class="exam-stats-row">
+    <div class="exam-stat sc"><div class="sn" id="eAttempts">0</div><div class="sl">🎯 Cubaan</div></div>
+    <div class="exam-stat sc"><div class="sn" id="eBest">-</div><div class="sl">🏆 Terbaik</div></div>
+    <div class="exam-stat sc"><div class="sn" id="eAvg">-</div><div class="sl">📊 Purata</div></div>
+  </div>
+
+  <div id="expiredBox" class="expired-box" style="display:none">
+    <div class="ei">⏰</div>
+    <h3>Peperiksaan Tamat!</h3>
+    <p>Masa untuk peperiksaan ini sudah habis. Tunggu set baharu daripada cikgu! 🌟</p>
+  </div>
+
+  <button class="btn-exam-start" id="examStartBtn" onclick="startExam()">✏️ Mula Latihan! (20 Soalan)</button>
+  <button class="btnS" style="width:min(93%,420px)" onclick="go('home')">← Balik ke Rumah</button>
+</div>
+
+<!-- ══════ EXAM QUIZ ══════ -->
+<div class="screen" id="exam-quiz">
+  <div class="eq-topbar">
+    <button class="backbtn" onclick="go('exam-home')" aria-label="Balik">←</button>
+    <div class="pw">
+      <div class="pt"><div class="eq-pf" id="eqp" style="width:0%"></div></div>
+      <div class="ptxt" id="eqpt">1 / 20</div>
+    </div>
+    <div class="eq-badge" id="eqScore">✅ 0</div>
+  </div>
+  <div class="eq-scroll" id="eqScroll">
+    <!-- rendered dynamically -->
+  </div>
+</div>
+
+<!-- ══════ EXAM REWARD ══════ -->
+<div class="screen" id="exam-reward">
+  <div class="exam-trophy">🎓</div>
+  <div class="er-title" id="erTitle">Tahniah!</div>
+  <div class="er-sub" id="erSub">Kamu hebat sekali!</div>
+  <div class="er-score rbox">
+    <div class="rbig" id="erScore">0/20</div>
+    <div class="rlbl">jawapan betul ✅</div>
+  </div>
+  <div class="er-grade" id="erGrade">🌟 Luar Biasa!</div>
+
+  <div class="rwbox" style="width:min(93%,380px)">
+    <h3>📋 Ringkasan:</h3>
+    <div id="erDetails"></div>
+  </div>
+
+  <div class="savetxt" id="erSave">💾 Menyimpan...</div>
+  <button class="btn-exam-main" onclick="go('exam-home');buildExamHome()">🔄 Cuba Lagi!</button>
+  <button class="btnS" style="width:min(93%,380px)" onclick="go('home')">🏠 Balik ke Rumah</button>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   VOCABULARY (Daily Learning)
+════════════════════════════════════════ */
+const LIB=[
+  {bm:'Kuda',en:'Horse',e:'🐴',s:'Kuda itu berlari sangat laju.',img:'https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=500&q=75'},
+  {bm:'Epal',en:'Apple',e:'🍎',s:'Saya suka makan epal merah yang manis.',img:'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500&q=75'},
+  {bm:'Pelangi',en:'Rainbow',e:'🌈',s:'Pelangi itu sangat cantik selepas hujan.',img:'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=500&q=75'},
+  {bm:'Buku',en:'Book',e:'📚',s:'Ini buku cerita kesukaan saya.',img:'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=75'},
+  {bm:'Kucing',en:'Cat',e:'🐱',s:'Kucing itu berbulu lembut dan comel.',img:'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500&q=75'},
+  {bm:'Bintang',en:'Star',e:'⭐',s:'Bintang bersinar terang di langit malam.',img:'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=500&q=75'},
+  {bm:'Kek',en:'Cake',e:'🎂',s:'Kek coklat itu sangat sedap dan manis.',img:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&q=75'},
+  {bm:'Bunga',en:'Flower',e:'🌺',s:'Bunga mawar itu berbau sangat wangi.',img:'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=500&q=75'},
+  {bm:'Awan',en:'Cloud',e:'☁️',s:'Awan putih nampak lembut seperti kapas.',img:'https://images.unsplash.com/photo-1534088568595-a066f77ec3d2?w=500&q=75'},
+  {bm:'Ikan',en:'Fish',e:'🐟',s:'Ikan emas berenang dalam kolam bersih.',img:'https://images.unsplash.com/photo-1524704654690-b56c05c78a00?w=500&q=75'},
+  {bm:'Arnab',en:'Rabbit',e:'🐰',s:'Arnab putih suka makan lobak merah.',img:'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=500&q=75'},
+  {bm:'Kupu-kupu',en:'Butterfly',e:'🦋',s:'Kupu-kupu cantik terbang dari bunga ke bunga.',img:'https://images.unsplash.com/photo-1497334421435-025907494758?w=500&q=75'},
+  {bm:'Susu',en:'Milk',e:'🥛',s:'Adik minum susu sejuk setiap pagi.',img:'https://images.unsplash.com/photo-1563636619-e910f01859ec?w=500&q=75'},
+  {bm:'Roti',en:'Bread',e:'🍞',s:'Roti bakar pagi ini berbau harum sekali.',img:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=75'},
+  {bm:'Gula-gula',en:'Candy',e:'🍬',s:'Gula-gula pelangi ini sangat manis.',img:'https://images.unsplash.com/photo-1581798459219-318e76aecc7b?w=500&q=75'},
+  {bm:'Pokok',en:'Tree',e:'🌳',s:'Pokok besar memberikan teduhan yang nyaman.',img:'https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=500&q=75'},
+  {bm:'Matahari',en:'Sun',e:'☀️',s:'Matahari bersinar cerah pada waktu pagi.',img:'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=500&q=75'},
+  {bm:'Burung',en:'Bird',e:'🐦',s:'Burung kecil bernyanyi dengan merdu.',img:'https://images.unsplash.com/photo-1444464666168-49d633b86797?w=500&q=75'},
+  {bm:'Gajah',en:'Elephant',e:'🐘',s:'Gajah besar itu makan tumbuhan hijau.',img:'https://images.unsplash.com/photo-1564760055775-d63b17a55c44?w=500&q=75'},
+  {bm:'Singa',en:'Lion',e:'🦁',s:'Singa yang gagah tidur di bawah pokok.',img:'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=500&q=75'},
+  {bm:'Pisang',en:'Banana',e:'🍌',s:'Pisang kuning itu sangat manis dan lazat.',img:'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500&q=75'},
+  {bm:'Mangga',en:'Mango',e:'🥭',s:'Mangga masak berwarna kuning dan harum.',img:'https://images.unsplash.com/photo-1553279768-865429fa0078?w=500&q=75'},
+  {bm:'Nasi',en:'Rice',e:'🍚',s:'Nasi putih panas dimakan dengan lauk pauk.',img:'https://images.unsplash.com/photo-1516714435131-44d6b64dc6a2?w=500&q=75'},
+  {bm:'Air',en:'Water',e:'💧',s:'Air sejuk diminum selepas bermain di padang.',img:'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=500&q=75'},
+  {bm:'Rumah',en:'House',e:'🏠',s:'Rumah saya berwarna putih dan cantik.',img:'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=500&q=75'},
+  {bm:'Bulan',en:'Moon',e:'🌙',s:'Bulan mengambang indah di langit malam.',img:'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=500&q=75'},
+  {bm:'Hujan',en:'Rain',e:'🌧️',s:'Hujan lebat turun pada petang itu.',img:'https://images.unsplash.com/photo-1518803194621-27188ba362c9?w=500&q=75'},
+  {bm:'Harimau',en:'Tiger',e:'🐯',s:'Harimau adalah haiwan yang kuat dan gagah.',img:'https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=500&q=75'},
+  {bm:'Kereta',en:'Car',e:'🚗',s:'Kereta merah itu berjalan dengan laju.',img:'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=500&q=75'},
+  {bm:'Itik',en:'Duck',e:'🦆',s:'Itik itu berenang dalam kolam bersama-sama.',img:'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=500&q=75'},
+];
+
+/* ════════════════════════════════════════
+   EXAM VOCABULARY — Grade 3 T2 Final Term
+   Ms Elieanie · Valid until 13 March 2026
+════════════════════════════════════════ */
+const EXAM_END = new Date('2026-03-13T23:59:59');
+
+const EXAM_TOPICS = [
+  {
+    id:'birthday', name:'Selamat Hari Jadi', en:'Birthday Celebration', icon:'🎂', color:'#FF6BB0',
+    words:[
+      {bm:'hari jadi',      en:'birthday',        e:'🎂'},
+      {bm:'kek hari jadi',  en:'birthday cake',   e:'🎂'},
+      {bm:'kek coklat',     en:'chocolate cake',  e:'🍫'},
+      {bm:'kek cawan',      en:'cupcake',          e:'🧁'},
+      {bm:'aiskrim',        en:'ice cream',        e:'🍦'},
+      {bm:'jeli',           en:'jelly',            e:'🟡'},
+      {bm:'pisang',         en:'banana',           e:'🍌'},
+      {bm:'topi parti',     en:'party hat',        e:'🎉'},
+      {bm:'hadiah',         en:'gift',             e:'🎁'},
+      {bm:'belon',          en:'balloons',         e:'🎈'},
+      {bm:'kawan-kawan',    en:'friends',          e:'👫'},
+      {bm:'meraikan',       en:'celebrate',        e:'🥳'},
+    ]
+  },
+  {
+    id:'pets', name:'Haiwan Kesayangan', en:'Pets', icon:'🐾', color:'#9B72CF',
+    words:[
+      {bm:'kucing',         en:'cat',              e:'🐱'},
+      {bm:'anjing',         en:'dog',              e:'🐶'},
+      {bm:'ikan',           en:'fish',             e:'🐟'},
+      {bm:'kura-kura',      en:'tortoise',         e:'🐢'},
+      {bm:'cantik',         en:'beautiful',        e:'✨'},
+      {bm:'comel',          en:'cute',             e:'🥰'},
+      {bm:'gemuk',          en:'fat',              e:'🐷'},
+      {bm:'kurus',          en:'thin',             e:'📏'},
+      {bm:'halus',          en:'soft',             e:'🪶'},
+      {bm:'ekor',           en:'tail',             e:'〰️'},
+      {bm:'bulu',           en:'fur',              e:'🐑'},
+      {bm:'memberi makan',  en:'feed',             e:'🍽️'},
+      {bm:'bermain',        en:'play',             e:'🎮'},
+    ]
+  },
+  {
+    id:'farm', name:'Di Ladang', en:'At the Farm', icon:'🚜', color:'#5DD9C1',
+    words:[
+      {bm:'lembu',          en:'cow',              e:'🐄'},
+      {bm:'kambing',        en:'goat',             e:'🐐'},
+      {bm:'ayam',           en:'chicken',          e:'🐔'},
+      {bm:'itik',           en:'duck',             e:'🦆'},
+      {bm:'kuda',           en:'horse',            e:'🐴'},
+      {bm:'petani',         en:'farmer',           e:'👨‍🌾'},
+      {bm:'rumput',         en:'grass',            e:'🌿'},
+      {bm:'susu',           en:'milk',             e:'🥛'},
+      {bm:'berlari',        en:'run',              e:'🏃'},
+      {bm:'berenang',       en:'swim',             e:'🏊'},
+      {bm:'terbang',        en:'fly',              e:'🦅'},
+      {bm:'berkokok',       en:'crow',             e:'🐓'},
+      {bm:'menyalak',       en:'bark',             e:'🐕'},
+    ]
+  }
+];
+
+// Flat list of all exam words with topic info
+const EXAM_WORDS = EXAM_TOPICS.flatMap(t => t.words.map(w=>({...w, topicId:t.id, topicName:t.name, topicIcon:t.icon})));
+
+const ACHIEVEMENTS=[
+  {id:'first',ic:'🌟',nm:'Bintang Pertama',dc:'Siapkan pelajaran pertama'},
+  {id:'s3',ic:'🔥',nm:'3 Hari Berturut',dc:'Belajar 3 hari berturut-turut'},
+  {id:'s7',ic:'🌈',nm:'Seminggu Hebat!',dc:'Belajar 7 hari berturut-turut'},
+  {id:'w20',ic:'📚',nm:'20 Perkataan!',dc:'Pelajari 20 perkataan'},
+  {id:'perfect',ic:'💯',nm:'Sempurna!',dc:'Dapat semua betul dalam kuiz'},
+  {id:'exam10',ic:'🎓',nm:'Pelajar Rajin!',dc:'Siapkan 10 latihan peperiksaan'},
+  {id:'exam100',ic:'👑',nm:'Genius Princess!',dc:'Dapat 100% dalam peperiksaan'},
+];
+
+/* ════════════════════════════════════════
+   STATE
+════════════════════════════════════════ */
+let S={history:{},stars:0,xp:0,streak:0,lastPlay:null,achs:[],sessions:[],
+       exam:{attempts:0,scores:[],lastSet:[]}};
+let words=[],ci=0,qi=0,qs=0;
+// exam state
+let eqWords=[], eqIdx=0, eqScore=0, eqAnswers=[];
+let scrambleBuilt='', scrambleTiles=[];
+
+const $=x=>document.getElementById(x);
+function load(){try{const r=localStorage.getItem('pbv4');if(r)S=JSON.parse(r);}catch(e){}}
+function save(){localStorage.setItem('pbv4',JSON.stringify(S));}
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+function init(){
+  load();
+  if(S.lastPlay){const d=(Date.now()-new Date(S.lastPlay))/864e5;if(d>1.5)S.streak=0;}
+  makeBubbles(); homeUI(); updateExamBadge();
+  window.speechSynthesis.getVoices();
+  setInterval(updateExamBadge, 60000);
+}
+
+function homeUI(){
+  const wc=Object.keys(S.history).length;
+  $('hW').textContent=wc; $('hS').textContent=S.stars||0;
+  $('hL').textContent=Math.floor((S.xp||0)/100)+1;
+  $('strk').textContent=`🔥 Streak: ${S.streak||0} Hari`;
+  const xm=(S.xp||0)%100;
+  $('xpT').textContent=`${xm} / 100`; $('xpB').style.width=xm+'%';
+}
+
+function updateExamBadge(){
+  const now=new Date(), diff=EXAM_END-now;
+  if(diff<=0){
+    $('examDaysBadge').textContent='Tamat';
+    $('examDaysBadge').style.background='#888';
+    return;
+  }
+  const days=Math.floor(diff/864e5);
+  $('examDaysBadge').textContent=days>0?`${days} hari lagi`:'Hari ini!';
+}
+
+/* ════════════════════════════════════════
+   NAV
+════════════════════════════════════════ */
+function go(sid){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $(sid).classList.add('active'); $(sid).scrollTop=0;
+  const sc=$(sid).querySelector('.lscroll,.qscroll,.pscroll,.eq-scroll');
+  if(sc)sc.scrollTop=0;
+}
+
+/* ════════════════════════════════════════
+   DAILY LESSON
+════════════════════════════════════════ */
+function startLesson(){
+  const now=Date.now();
+  const rev=LIB.filter(w=>{const h=S.history[w.bm];if(!h)return false;const d=(now-h.at)/864e5;return d>=2&&(h.sc||0)<4;}).sort(()=>Math.random()-.5).slice(0,5);
+  const fresh=LIB.filter(w=>!S.history[w.bm]).sort(()=>Math.random()-.5);
+  words=[...fresh.slice(0,Math.max(5,10-rev.length)),...rev].slice(0,10);
+  if(words.length<5)words=LIB.sort(()=>Math.random()-.5).slice(0,10);
+  ci=0; go('lesson'); renderW();
+}
+function renderW(){
+  const w=words[ci];
+  $('lp').style.width=(ci/words.length*100)+'%'; $('lpt').textContent=`${ci+1} / ${words.length}`;
+  const isNew=!S.history[w.bm];
+  $('wb').textContent=isNew?'✨ Baru':'🔄 Ulangkaji'; $('wb').className='wbdg '+(isNew?'bnew':'brec');
+  $('ww').textContent=w.bm; $('wtr').textContent=w.en; $('ws').textContent=w.s;
+  const img=$('wi'),ph=$('wph');
+  ph.style.display='none'; img.style.display='block'; img.src=w.img;
+  img.onerror=()=>{img.style.display='none';ph.textContent=w.e;ph.style.display='flex';};
+  $('lesson').querySelector('.lscroll').scrollTop=0;
+  setTimeout(spk,500);
+}
+function spk(){
+  if(!words[ci])return; window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(words[ci].bm);
+  const vs=window.speechSynthesis.getVoices();
+  const v=vs.find(v=>v.lang==='ms-MY')||vs.find(v=>v.lang.startsWith('ms'))||vs.find(v=>v.lang.startsWith('id'))||null;
+  if(v)u.voice=v; u.lang='ms-MY'; u.rate=0.8; u.pitch=1.2;
+  window.speechSynthesis.speak(u);
+}
+function nxtL(){if(ci<words.length-1){ci++;renderW();}else{qi=0;qs=0;go('quiz');renderQ();}}
+
+/* ════════════════════════════════════════
+   DAILY QUIZ
+════════════════════════════════════════ */
+function renderQ(){
+  if(qi>=words.length){finish();return;}
+  const w=words[qi];
+  $('qp').style.width=(qi/words.length*100)+'%'; $('qpt').textContent=`${qi+1} / ${words.length}`;
+  $('qw').textContent=w.bm;
+  const opts=[w.en];
+  const pool=LIB.filter(x=>x.en!==w.en).sort(()=>Math.random()-.5);
+  while(opts.length<4)opts.push(pool[opts.length-1].en);
+  opts.sort(()=>Math.random()-.5);
+  const c=$('qo'); c.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('button'); b.className='qopt'; b.textContent=o;
+    b.onclick=()=>ans(b,o,w.en,w); c.appendChild(b);
+  });
+  $('quiz').querySelector('.qscroll').scrollTop=0;
+}
+function ans(btn,ch,correct,w){
+  document.querySelectorAll('.qopt').forEach(b=>b.onclick=null);
+  if(ch===correct){btn.classList.add('ok');qs++;if(!S.history[w.bm])S.history[w.bm]={at:Date.now(),sc:0};S.history[w.bm].sc=(S.history[w.bm].sc||0)+1;S.history[w.bm].ls=Date.now();fb(['🌟 Betul!','💖 Hebat!','✨ Bagus!','🎉 Yes!'][~~(Math.random()*4)],true);}
+  else{btn.classList.add('no');document.querySelectorAll('.qopt').forEach(b=>{if(b.textContent===correct)b.classList.add('ok');});if(!S.history[w.bm])S.history[w.bm]={at:Date.now(),sc:0};fb(['❌ Cuba lagi!','💪 Tak pe!','🌸 Next time!'][~~(Math.random()*3)],false);}
+  setTimeout(()=>{qi++;renderQ();},1350);
+}
+function finish(){
+  go('reward'); words.forEach(w=>{if(!S.history[w.bm])S.history[w.bm]={at:Date.now(),sc:0};});
+  const stars=qs>=words.length?3:qs>=Math.ceil(words.length*.7)?2:1;
+  S.stars=(S.stars||0)+stars; S.xp=(S.xp||0)+(qs*10);
+  const today=new Date().toDateString();
+  if(S.lastPlay!==today){const last=S.lastPlay?new Date(S.lastPlay):null;const yest=new Date();yest.setDate(yest.getDate()-1);S.streak=(last&&last.toDateString()===yest.toDateString())?(S.streak||0)+1:1;S.lastPlay=today;}
+  S.sessions=S.sessions||[]; S.sessions.push({date:today,score:qs,total:words.length});
+  if(S.sessions.length>30)S.sessions=S.sessions.slice(-30);
+  checkAchs(); save();
+  $('rs').textContent=`${qs}/${words.length}`; $('rst').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars);
+  $('rc').innerHTML=words.map(w=>`<span class="chip">${w.bm} = ${w.en}</span>`).join('');
+  $('rsv').textContent=`✅ Disimpan! +${stars} bintang ⭐`;
+  homeUI(); if(qs>=words.length)confetti();
+}
+function checkAchs(){
+  S.achs=S.achs||[]; const a=id=>{if(!S.achs.includes(id))S.achs.push(id);};
+  if((S.sessions||[]).length>=1)a('first');
+  if((S.streak||0)>=3)a('s3'); if((S.streak||0)>=7)a('s7');
+  if(Object.keys(S.history).length>=20)a('w20'); if(qs===words.length)a('perfect');
+  if((S.exam.attempts||0)>=10)a('exam10');
+}
+function goHome(){go('home');homeUI();}
+
+/* ════════════════════════════════════════
+   PROGRESS
+════════════════════════════════════════ */
+function openProg(){
+  go('progress');
+  const days=['Ahd','Isn','Sel','Rab','Kha','Jum','Sab'],now=new Date();
+  const bc=$('wbars'); bc.innerHTML='';
+  for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const ds=d.toDateString();const ses=(S.sessions||[]).find(s=>s.date===ds);const pct=ses?Math.round(ses.score/(ses.total||10)*100):0;bc.innerHTML+=`<div class="bw2"><div class="bb" style="height:${pct}px;max-height:100px"></div><div class="bl">${days[d.getDay()]}<br>${pct>0?pct+'%':'-'}</div></div>`;}
+  const ag=$('ag'); ag.innerHTML='';
+  ACHIEVEMENTS.forEach(a=>{const on=(S.achs||[]).includes(a.id);ag.innerHTML+=`<div class="acard ${on?'on':''}"><div class="aic">${a.ic}</div><div class="anm">${a.nm}</div><div class="adc">${a.dc}</div></div>`;});
+  const vl=$('vl'); const learned=LIB.filter(w=>S.history[w.bm]);
+  if(!learned.length){vl.innerHTML='<p style="color:var(--txt-l);text-align:center;padding:10px">Belum ada lagi! 🌱</p>';}
+  else{vl.innerHTML=learned.map(w=>{const sc=Math.min(S.history[w.bm].sc||0,4);return `<div class="vi"><div><div class="vw">${w.bm}</div><div class="vt">${w.en}</div></div><div class="vs">${sc?'⭐'.repeat(sc):'🌱'}</div></div>`;}).join('');}
+}
+
+/* ════════════════════════════════════════
+   EXAM HOME
+════════════════════════════════════════ */
+function openExamHome(){
+  go('exam-home'); buildExamHome();
+}
+
+function buildExamHome(){
+  // Countdown
+  const now=new Date(), diff=EXAM_END-now;
+  const expired=diff<=0;
+  if(!expired){
+    const d=Math.floor(diff/864e5), h=Math.floor((diff%864e5)/36e5), m=Math.floor((diff%36e5)/6e4);
+    $('cdD').textContent=d; $('cdH').textContent=h; $('cdM').textContent=m;
+  } else {
+    $('cdBox').innerHTML='<div style="font-size:1.1rem;font-weight:800">⏰ Masa Tamat</div>';
+    $('examStartBtn').style.display='none';
+    $('expiredBox').style.display='block';
+  }
+  // Stats
+  const ex=S.exam||{};
+  $('eAttempts').textContent=ex.attempts||0;
+  const scores=ex.scores||[];
+  $('eBest').textContent=scores.length?Math.max(...scores)+'%':'-';
+  $('eAvg').textContent=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length)+'%':'-';
+}
+
+/* ════════════════════════════════════════
+   EXAM QUIZ — 20 Questions, Mixed Types
+  Types: mcq-bm-en, mcq-en-bm, true-false, scramble, topic-sort
+════════════════════════════════════════ */
+function startExam(){
+  // Build 20 questions from exam words, rotating through types
+  // Ensure even coverage across topics and question types
+  const allW=[...EXAM_WORDS].sort(()=>Math.random()-.5);
+  const types=['mcq-bm-en','mcq-en-bm','true-false','scramble','topic-sort'];
+  eqWords=[]; eqIdx=0; eqScore=0; eqAnswers=[];
+
+  // Pick 20 words (with repeats if <20 words)
+  const pool=[];
+  for(let i=0;i<20;i++) pool.push(allW[i%allW.length]);
+  pool.sort(()=>Math.random()-.5);
+
+  // Assign question types ensuring variety (4 of each type)
+  const typePool=[...types,...types,...types,...types].slice(0,20).sort(()=>Math.random()-.5);
+  eqWords=pool.map((w,i)=>({word:w, type:typePool[i]}));
+
+  go('exam-quiz'); renderEQ();
+}
+
+function renderEQ(){
+  if(eqIdx>=eqWords.length){finishExam();return;}
+  const {word:w, type} = eqWords[eqIdx];
+  const pct=(eqIdx/eqWords.length*100);
+  $('eqp').style.width=pct+'%'; $('eqpt').textContent=`${eqIdx+1} / ${eqWords.length}`;
+  $('eqScore').textContent=`✅ ${eqScore}`;
+
+  const scroll=$('eqScroll'); scroll.innerHTML=''; scroll.scrollTop=0;
+  const card=document.createElement('div'); card.className='eq-card';
+
+  if(type==='mcq-bm-en') buildMCQ(card,w,'bm-en');
+  else if(type==='mcq-en-bm') buildMCQ(card,w,'en-bm');
+  else if(type==='true-false') buildTF(card,w);
+  else if(type==='scramble') buildScramble(card,w);
+  else if(type==='topic-sort') buildTopicSort(card,w);
+
+  scroll.appendChild(card);
+}
+
+/* ── MCQ Builder ── */
+function buildMCQ(card,w,dir){
+  const isEnMalay=dir==='en-bm';
+  const question=isEnMalay?`"${w.en}" dalam Bahasa Melayu ialah...`:`Apa ertinya "${w.bm}"?`;
+  const correct=isEnMalay?w.bm:w.en;
+  const badPool=EXAM_WORDS.filter(x=>isEnMalay?x.bm!==w.bm:x.en!==w.en).sort(()=>Math.random()-.5);
+  const opts=[correct, ...(isEnMalay?badPool.slice(0,3).map(x=>x.bm):badPool.slice(0,3).map(x=>x.en))].sort(()=>Math.random()-.5);
+
+  card.innerHTML=`
+    <div class="eq-type-badge">${isEnMalay?'🇲🇾 Terjemah ke BM':'🇬🇧 Terjemah ke BI'}</div>
+    <div class="eq-question">${w.e} ${question}</div>
+    <div class="eq-hint">Pilih jawapan yang betul:</div>
+    <div class="eq-opts" id="eopts"></div>`;
+
+  const oc=card.querySelector('#eopts');
+  opts.forEach(o=>{
+    const b=document.createElement('button'); b.className='eq-opt'; b.textContent=o;
+    b.onclick=()=>{
+      card.querySelectorAll('.eq-opt').forEach(x=>x.onclick=null);
+      const ok=o===correct; b.classList.add(ok?'ok':'no');
+      if(!ok) card.querySelectorAll('.eq-opt').forEach(x=>{if(x.textContent===correct)x.classList.add('ok');});
+      if(ok)eqScore++;
+      eqAnswers.push({w:w.bm,ok});
+      fb(ok?['🌟 Betul!','💖 Pandai!','✨ Bagus!'][~~(Math.random()*3)]:['❌ Salah!','💪 Tak pe!','📖 Ingat ya!'][~~(Math.random()*3)],ok);
+      setTimeout(()=>{eqIdx++;renderEQ();},1350);
+    };
+    oc.appendChild(b);
+  });
+}
+
+/* ── True/False Builder ── */
+function buildTF(card,w){
+  // 50% chance show correct pair, 50% show wrong pair
+  const correct=Math.random()>.5;
+  let displayEn=w.en;
+  if(!correct){
+    const others=EXAM_WORDS.filter(x=>x.en!==w.en);
+    displayEn=others[~~(Math.random()*others.length)].en;
+  }
+  card.innerHTML=`
+    <div class="eq-type-badge">✅❌ Betul atau Salah?</div>
+    <div class="eq-question" style="text-align:center;margin-bottom:8px;">"${w.bm}"</div>
+    <div style="text-align:center;font-size:1.2rem;font-weight:800;color:var(--txt-l);margin-bottom:16px;">= "${displayEn}" ?</div>
+    <div class="tf-row">
+      <button class="tf-btn" id="tfY">👍 Betul!</button>
+      <button class="tf-btn" id="tfN">👎 Salah!</button>
+    </div>`;
+
+  function tfAnswer(ans){
+    $('tfY').onclick=$('tfN').onclick=null;
+    const ok=(ans===correct);
+    $('tfY').classList.add(ans?'ok':'no'); $('tfN').classList.add(!ans?'ok':'no');
+    if(ok)eqScore++;
+    eqAnswers.push({w:w.bm,ok});
+    fb(ok?['🌟 Betul!','💖 Pandai!','✨ Ya!'][~~(Math.random()*3)]:['❌ Salah!','💪 Tak pe!','🤔 Hmm!'][~~(Math.random()*3)],ok);
+    setTimeout(()=>{eqIdx++;renderEQ();},1350);
+  }
+  card.querySelector('#tfY').onclick=()=>tfAnswer(true);
+  card.querySelector('#tfN').onclick=()=>tfAnswer(false);
+}
+
+/* ── Scramble Builder ── */
+function buildScramble(card,w){
+  // Scramble the BM word's letters
+  const target=w.bm.toLowerCase();
+  let letters=target.split('').sort(()=>Math.random()-.5);
+  // Add 2 distractor letters
+  const extra='aeiounmlksprbt'.split('').sort(()=>Math.random()-.5);
+  for(let e of extra){if(!letters.includes(e)&&letters.length<target.length+2){letters.push(e);}}
+  letters.sort(()=>Math.random()-.5);
+
+  let built='';
+  card.innerHTML=`
+    <div class="eq-type-badge">🔤 Eja Perkataan!</div>
+    <div class="eq-question" style="text-align:center;">${w.e} "${w.en}"</div>
+    <div class="eq-hint" style="text-align:center;">Eja dalam Bahasa Melayu:</div>
+    <div class="scramble-answer" id="scrAns"><span style="color:var(--txt-l);font-size:.9rem">Ketik huruf di bawah...</span></div>
+    <div class="letter-tiles" id="scrTiles"></div>
+    <div class="scramble-btns">
+      <button class="scr-clr" onclick="scrClear()">🔄 Kosong</button>
+      <button class="scr-chk" onclick="scrCheck('${target}')">✅ Semak!</button>
+    </div>`;
+
+  const tilesEl=card.querySelector('#scrTiles');
+  letters.forEach((l,i)=>{
+    const t=document.createElement('button'); t.className='ltile'; t.textContent=l;
+    t.dataset.idx=i; t.dataset.letter=l;
+    t.onclick=()=>scrAdd(t,l,target.length);
+    tilesEl.appendChild(t);
+  });
+  built='';
+}
+
+function scrAdd(tile,letter,maxLen){
+  if(tile.classList.contains('used'))return;
+  const ans=document.getElementById('scrAns');
+  const current=ans.dataset.built||'';
+  if(current.length>=maxLen)return;
+  const next=current+letter; ans.dataset.built=next;
+  ans.classList.add('has-word');
+  ans.innerHTML='';
+  next.split('').forEach((ch,i)=>{
+    const span=document.createElement('span');
+    span.style.cssText='display:inline-flex;align-items:center;justify-content:center;background:var(--pur-l);color:var(--pur);width:36px;height:36px;border-radius:9px;font-family:\'Fredoka One\',cursive;font-size:1.2rem;margin:2px;';
+    span.textContent=ch;
+    ans.appendChild(span);
+  });
+  tile.classList.add('used');
+}
+
+function scrClear(){
+  const ans=document.getElementById('scrAns');
+  ans.dataset.built=''; ans.classList.remove('has-word');
+  ans.innerHTML='<span style="color:var(--txt-l);font-size:.9rem">Ketik huruf di bawah...</span>';
+  document.querySelectorAll('.ltile').forEach(t=>t.classList.remove('used'));
+}
+
+function scrCheck(target){
+  const ans=document.getElementById('scrAns');
+  const built=(ans.dataset.built||'').toLowerCase().trim();
+  const ok=built===target;
+  if(ok)eqScore++;
+  eqAnswers.push({w:target,ok});
+  // colour feedback
+  ans.querySelectorAll('span').forEach(s=>{s.style.background=ok?'#CAFFBF':'#FFADAD';s.style.color=ok?'#2A7830':'#A03030';});
+  fb(ok?['🌟 Betul!','💖 Pandai eja!','✨ Bagus!'][~~(Math.random()*3)]:`❌ Jawapan: ${target}`,ok);
+  // disable check & clear
+  document.querySelectorAll('.scr-chk,.scr-clr,.ltile').forEach(b=>b.onclick=null);
+  setTimeout(()=>{eqIdx++;renderEQ();},1600);
+}
+
+/* ── Topic Sort Builder ── */
+function buildTopicSort(card,w){
+  card.innerHTML=`
+    <div class="eq-type-badge">📂 Topik Mana?</div>
+    <div class="eq-question" style="text-align:center;">${w.e} "${w.bm}"</div>
+    <div class="eq-hint" style="text-align:center;">Perkataan ini dari topik mana?</div>
+    <div class="topic-opts" id="topts"></div>`;
+
+  const tc=card.querySelector('#topts');
+  EXAM_TOPICS.forEach(t=>{
+    const b=document.createElement('button'); b.className='topic-opt';
+    b.innerHTML=`<span>${t.icon}</span><span>${t.name}</span>`;
+    b.onclick=()=>{
+      card.querySelectorAll('.topic-opt').forEach(x=>x.onclick=null);
+      const ok=t.id===w.topicId; b.classList.add(ok?'ok':'no');
+      if(!ok) card.querySelectorAll('.topic-opt').forEach(x=>{if(x.dataset.id===w.topicId)x.classList.add('ok');});
+      if(ok)eqScore++;
+      eqAnswers.push({w:w.bm,ok});
+      fb(ok?['🌟 Betul!','💖 Pandai!','✨ Ya, betul!'][~~(Math.random()*3)]:['❌ Salah topik!','📖 Ingat ya!','💪 Cuba lagi!'][~~(Math.random()*3)],ok);
+      setTimeout(()=>{eqIdx++;renderEQ();},1350);
+    };
+    b.dataset.id=t.id; tc.appendChild(b);
+  });
+}
+
+/* ════════════════════════════════════════
+   EXAM FINISH
+════════════════════════════════════════ */
+function finishExam(){
+  go('exam-reward');
+  const pct=Math.round(eqScore/eqWords.length*100);
+  S.exam=S.exam||{attempts:0,scores:[],lastSet:[]};
+  S.exam.attempts=(S.exam.attempts||0)+1;
+  S.exam.scores=S.exam.scores||[]; S.exam.scores.push(pct);
+  if(S.exam.scores.length>20)S.exam.scores=S.exam.scores.slice(-20);
+  S.xp=(S.xp||0)+(eqScore*15); S.stars=(S.stars||0)+(pct>=80?3:pct>=60?2:1);
+  checkAchs(); if(pct===100){S.achs=S.achs||[];if(!S.achs.includes('exam100'))S.achs.push('exam100');}
+  save(); homeUI();
+
+  $('erScore').textContent=`${eqScore}/${eqWords.length}`;
+  const grades=[
+    [90,'🥇 Cemerlang!','#FFD700'],
+    [75,'🥈 Sangat Bagus!','#9B72CF'],
+    [60,'🥉 Bagus!','#5DD9C1'],
+    [40,'💪 Teruskan!','#FF9A3C'],
+    [0,'📖 Belajar Lagi!','#FF6B6B']
+  ];
+  const [,gLabel,gColor]=grades.find(([min])=>pct>=min);
+  $('erTitle').textContent=pct>=80?'Tahniah, Princess! 🎉':'Usaha yang baik! 💪';
+  $('erSub').textContent=pct>=80?`Kamu dapat ${pct}%! Luar biasa!`:`Kamu dapat ${pct}%. Terus belajar!`;
+  $('erGrade').textContent=gLabel; $('erGrade').style.background=gColor;
+
+  // Details: wrong answers
+  const wrong=eqAnswers.filter(a=>!a.ok);
+  const det=$('erDetails');
+  if(wrong.length===0){det.innerHTML='<p style="color:#2A7830;font-weight:800">🌟 Semua betul! Luar biasa!</p>';}
+  else{det.innerHTML='<p style="font-size:.8rem;color:var(--txt-l);margin-bottom:8px">Ulang kaji ini:</p>'+wrong.slice(0,5).map(a=>`<div class="chip" style="background:#FFE0E0;color:#A03030">${a.w}</div>`).join('');}
+
+  $('erSave').textContent=`✅ +${S.exam.attempts>=10?'Achievement unlocked! 🎓 ':''}Disimpan!`;
+  if(pct>=80)confetti();
+}
+
+/* ════════════════════════════════════════
+   SHARED FEEDBACK
+════════════════════════════════════════ */
+function fb(msg,ok){
+  const o=$('fbo'),m=$('fbm');
+  m.textContent=msg; m.style.color=ok?'#2A7830':'#B03030';
+  o.classList.add('on'); setTimeout(()=>o.classList.remove('on'),1150);
+}
+
+/* ════════════════════════════════════════
+   CONFETTI & BUBBLES
+════════════════════════════════════════ */
+function confetti(){
+  const cols=['#FF6BB0','#9B72CF','#5DD9C1','#FFD166','#FF9A3C','#fff','#FF6B35'];
+  const app=document.getElementById('app');
+  for(let i=0;i<60;i++){const el=document.createElement('div');el.className='cf';const sz=6+Math.random()*8;el.style.cssText=`left:${Math.random()*100}%;background:${cols[~~(Math.random()*cols.length)]};animation-duration:${2.2+Math.random()*2}s;animation-delay:${Math.random()*.8}s;width:${sz}px;height:${sz}px;border-radius:${Math.random()>.5?'50%':'2px'};top:-20px;`;app.appendChild(el);setTimeout(()=>el.remove(),4500);}
+}
+function makeBubbles(){
+  const c=$('bgB'),cols=['#FF6BB0','#9B72CF','#5DD9C1','#FFD166'];
+  for(let i=0;i<10;i++){const el=document.createElement('div');el.className='bub';const sz=30+Math.random()*110;el.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;background:${cols[i%4]};animation-duration:${14+Math.random()*20}s;animation-delay:${Math.random()*12}s;`;c.appendChild(el);}
+}
+
+/* ════════════════════════════════════════
+   SPEECH & VOICES
+════════════════════════════════════════ */
+window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
+document.addEventListener('touchstart',function unlock(){const u=new SpeechSynthesisUtterance('');window.speechSynthesis.speak(u);document.removeEventListener('touchstart',unlock);},{once:true});
+
+init();
+
+// Tell the parent page (Hostinger) how tall this app is
+// so it can auto-size the embed iframe
+try {
+  window.parent.postMessage({ height: 900 }, '*');
+} catch(e) {}
+</script>
+</div><!-- /#app -->
+</body>
+</html>
