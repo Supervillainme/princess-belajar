@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#9B72CF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Shivani Exam">
+<title>⭐ Shivani's Exam Prep!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#FF6BB0;--pink-l:#FFB8D9;
+  --pur:#9B72CF;--pur-l:#D4B8F0;
+  --mint:#5DD9C1;--yel:#FFD166;--org:#FF9A3C;--red:#FF6B6B;
+  --gold:#F5A623;
+  --eng:#FF6BB0;--eng-d:#C03880;
+  --mat:#5DD9C1;--mat-d:#25A090;
+  --sci:#9B72CF;--sci-d:#7A50A8;
+  --bg:#FFF0FA;--txt:#3D2C5E;--txt-l:#8B7BAA;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-l:env(safe-area-inset-left,0px);
+  --safe-r:env(safe-area-inset-right,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none;}
+html,body{height:100%;width:100%;margin:0;padding:0;font-family:'Nunito',sans-serif;background:var(--bg);-webkit-text-size-adjust:100%;}
+
+#app{position:relative;width:100%;height:900px;overflow:hidden;font-family:'Nunito',sans-serif;}
+
+.screen{display:none;position:absolute;top:0;left:0;right:0;height:900px;flex-direction:column;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;z-index:1;padding-left:var(--safe-l);padding-right:var(--safe-r);}
+.screen.active{display:flex;}
+.screen::-webkit-scrollbar{display:none;}
+
+#bgB{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;height:900px;}
+.bub{position:absolute;border-radius:50%;opacity:.07;animation:rise linear infinite;}
+@keyframes rise{0%{transform:translateY(105vh) scale(.6);opacity:0}8%{opacity:.07}92%{opacity:.07}100%{transform:translateY(-10vh) scale(1.3);opacity:0}}
+
+.fbo{position:absolute;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .18s;}
+.fbo.on{opacity:1;}
+.fbm{font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,7.5vw,2.9rem);text-align:center;animation:pop .3s ease;background:rgba(255,255,255,.92);padding:13px 28px;border-radius:22px;box-shadow:0 8px 28px rgba(0,0,0,.12);}
+@keyframes pop{0%{transform:scale(.5)}65%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+.cf{position:absolute;border-radius:2px;pointer-events:none;z-index:999;animation:fall ease forwards;}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+/* HOME */
+#home{background:linear-gradient(160deg,#FFE0F5 0%,#E8D5FF 55%,#D5F0FF 100%);align-items:center;padding-top:calc(var(--safe-t) + 18px);padding-bottom:calc(var(--safe-b) + 20px);}
+.hero{font-size:clamp(58px,15vw,85px);animation:bop 2s ease-in-out infinite;line-height:1;}
+@keyframes bop{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.htitle{font-family:'Fredoka One',cursive;font-size:clamp(1.7rem,6.8vw,2.7rem);color:var(--pur);text-align:center;line-height:1.1;margin:6px 0 3px;text-shadow:3px 3px 0 rgba(155,114,207,.18);}
+.hsub{color:var(--txt-l);font-size:clamp(.8rem,3.2vw,.95rem);text-align:center;margin-bottom:14px;}
+.streak-pill{background:linear-gradient(135deg,var(--yel),var(--org));color:#fff;padding:7px 18px;border-radius:30px;font-family:'Fredoka One',cursive;font-size:clamp(.88rem,3.6vw,1rem);box-shadow:0 4px 14px rgba(255,154,60,.4);margin-bottom:13px;}
+.stats{display:flex;gap:8px;width:min(93%,380px);margin-bottom:13px;}
+.sc{flex:1;background:#fff;border-radius:16px;padding:10px 6px;text-align:center;box-shadow:0 4px 12px rgba(155,114,207,.13);border-bottom:4px solid var(--pur-l);}
+.sn{font-family:'Fredoka One',cursive;font-size:clamp(1.35rem,5.2vw,1.85rem);color:var(--pur);}
+.sl{font-size:clamp(.58rem,2.2vw,.68rem);color:var(--txt-l);font-weight:800;}
+.xpw{width:min(93%,380px);margin-bottom:14px;}
+.xpr{display:flex;justify-content:space-between;font-size:.76rem;color:var(--txt-l);font-weight:800;margin-bottom:4px;}
+.xpt{background:#fff;border-radius:20px;height:13px;overflow:hidden;border:2px solid var(--pur-l);}
+.xpf{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--pink),var(--yel));transition:width 1s ease;}
+
+.subj-cards{width:min(93%,380px);display:flex;flex-direction:column;gap:10px;}
+.subj-card{background:#fff;border-radius:20px;padding:13px 15px;display:flex;align-items:center;gap:13px;box-shadow:0 5px 18px rgba(155,114,207,.13);border-left:6px solid;cursor:pointer;transition:transform .08s,box-shadow .08s;touch-action:manipulation;}
+.subj-card:active{transform:translateY(3px);box-shadow:0 2px 8px rgba(155,114,207,.1);}
+.sc-eng{border-color:var(--eng);}
+.sc-mat{border-color:var(--mat);}
+.sc-sci{border-color:var(--sci);}
+.subj-icon{font-size:2.1rem;flex-shrink:0;}
+.subj-info{flex:1;}
+.subj-name{font-family:'Fredoka One',cursive;font-size:1.12rem;color:var(--txt);}
+.subj-topics{font-size:.67rem;color:var(--txt-l);margin-top:2px;line-height:1.4;}
+.subj-stars{font-family:'Fredoka One',cursive;font-size:1.05rem;flex-shrink:0;}
+
+/* QUIZ */
+#quiz{background:var(--bg);}
+.topbar{position:sticky;top:0;z-index:10;padding:calc(var(--safe-t) + 10px) 14px 10px;display:flex;align-items:center;gap:10px;background:#fff;box-shadow:0 2px 12px rgba(155,114,207,.1);flex-shrink:0;}
+.backbtn{min-width:44px;min-height:44px;background:var(--pur-l);border:none;border-radius:12px;font-size:1.2rem;cursor:pointer;color:var(--pur);display:flex;align-items:center;justify-content:center;touch-action:manipulation;}
+.pw{flex:1;}
+.pt{background:#EEE;border-radius:20px;height:12px;overflow:hidden;}
+.pf{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--mint),var(--pur));transition:width .4s ease;}
+.ptxt{font-size:.7rem;color:var(--txt-l);font-weight:800;margin-top:3px;}
+.subj-badge{padding:5px 12px;border-radius:20px;font-family:'Fredoka One',cursive;font-size:.8rem;color:#fff;white-space:nowrap;}
+.sb-eng{background:var(--eng);}
+.sb-mat{background:var(--mat);color:var(--txt);}
+.sb-sci{background:var(--sci);}
+
+.qscroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:14px 0 10px;display:flex;flex-direction:column;align-items:center;}
+.qscroll::-webkit-scrollbar{display:none;}
+
+.loading-card{width:min(93%,420px);background:#fff;border-radius:22px;padding:36px 20px;text-align:center;box-shadow:0 6px 22px rgba(155,114,207,.15);border:3px solid var(--pur-l);}
+.spin{width:46px;height:46px;border-radius:50%;border:5px solid var(--pur-l);border-top-color:var(--pur);animation:spin 1s linear infinite;margin:0 auto 13px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-family:'Fredoka One',cursive;font-size:1.08rem;color:var(--pur);}
+.loading-sub{font-size:.8rem;color:var(--txt-l);margin-top:4px;}
+
+.q-card{width:min(93%,420px);background:#fff;border-radius:22px;padding:17px;box-shadow:0 6px 22px rgba(155,114,207,.15);border:3px solid var(--pur-l);margin-bottom:12px;animation:slideUp .32s cubic-bezier(.34,1.4,.64,1);}
+.q-card.eng-card{border-color:var(--pink-l);}
+.q-card.mat-card{border-color:#B3EDE7;}
+.q-card.sci-card{border-color:var(--pur-l);}
+@keyframes slideUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+.q-type-badge{display:inline-block;padding:3px 11px;border-radius:20px;font-size:.7rem;font-weight:800;margin-bottom:8px;}
+.tb-eng{background:#FFF0FA;color:var(--eng);border:2px solid var(--pink-l);}
+.tb-mat{background:#E8FFFB;color:var(--mat-d);border:2px solid #B3EDE7;}
+.tb-sci{background:#F3EEFF;color:var(--sci);border:2px solid var(--pur-l);}
+.q-num{font-size:.68rem;font-weight:800;color:#aaa;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;}
+.q-text{font-family:'Fredoka One',cursive;font-size:clamp(1.15rem,4.8vw,1.55rem);color:var(--txt);line-height:1.3;margin-bottom:13px;}
+
+.q-opts{display:flex;flex-direction:column;gap:9px;}
+.q-opt{width:100%;min-height:52px;padding:0 13px;background:#FAFAFA;border:3px solid #EEE8F8;border-radius:15px;font-size:clamp(.92rem,3.6vw,1.06rem);font-weight:800;color:var(--txt);cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:0 4px 0 #EEE8F8;touch-action:manipulation;transition:background .1s,border-color .1s;}
+.q-opt:active{transform:translateY(2px);box-shadow:0 2px 0 #EEE8F8;}
+.q-opt.ok{background:#EFFFEF;border-color:#5DD96A;box-shadow:0 4px 0 #35B040;color:#2A7830;}
+.q-opt.no{background:#FFF0F0;border-color:var(--red);box-shadow:0 4px 0 #C04040;color:#A03030;}
+.opt-ltr{min-width:29px;height:29px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;background:#EEE8F8;color:var(--pur);flex-shrink:0;}
+.q-opt.ok .opt-ltr{background:#35B040;color:#fff;}
+.q-opt.no .opt-ltr{background:#C04040;color:#fff;}
+
+.fill-inp{width:100%;border:3px solid #EEE8F8;border-radius:15px;padding:13px 15px;font-family:'Nunito',sans-serif;font-size:1.08rem;font-weight:800;color:var(--txt);outline:none;transition:border-color .2s;background:#FAFAFA;}
+.fill-inp:focus{border-color:var(--pur);}
+.fill-inp.ok{border-color:#5DD96A;background:#EFFFEF;color:#2A7830;}
+.fill-inp.no{border-color:var(--red);background:#FFF0F0;color:#A03030;}
+
+.q-expl{border-radius:12px;padding:10px 12px;font-size:.8rem;line-height:1.5;margin-top:9px;display:none;font-weight:700;}
+.q-expl.show{display:block;}
+.expl-ok{background:#EFFFEF;color:#2A7830;border-left:4px solid #5DD96A;}
+.expl-no{background:#FFF0F0;color:#A03030;border-left:4px solid var(--red);}
+
+.qact{flex-shrink:0;padding:10px 14px calc(var(--safe-b) + 10px);background:var(--bg);display:flex;gap:10px;width:100%;}
+.btn-submit{flex:2;min-height:52px;background:linear-gradient(135deg,var(--pink),var(--pur));color:#fff;border:none;border-radius:17px;font-family:'Fredoka One',cursive;font-size:clamp(.93rem,3.9vw,1.08rem);cursor:pointer;box-shadow:0 5px 0 var(--sci-d);transition:transform .08s,box-shadow .08s;touch-action:manipulation;}
+.btn-submit:active{transform:translateY(4px);box-shadow:none;}
+.btn-next{flex:2;min-height:52px;background:linear-gradient(135deg,var(--mint),#30C5AF);color:#fff;border:none;border-radius:17px;font-family:'Fredoka One',cursive;font-size:clamp(.93rem,3.9vw,1.08rem);cursor:pointer;box-shadow:0 5px 0 var(--mat-d);transition:transform .08s,box-shadow .08s;touch-action:manipulation;display:none;}
+.btn-next:active{transform:translateY(4px);box-shadow:none;}
+.btn-skip{min-width:52px;min-height:52px;background:#fff;border:3px solid var(--pur-l);border-radius:17px;color:var(--txt-l);font-family:'Fredoka One',cursive;font-size:.9rem;cursor:pointer;transition:transform .08s;touch-action:manipulation;}
+.btn-skip:active{transform:scale(.94);}
+
+.err-card{width:min(93%,420px);background:#FFF0F0;border-radius:22px;padding:24px;text-align:center;border:3px solid var(--red);display:none;}
+.err-card.show{display:block;}
+
+/* REWARD */
+#reward{background:linear-gradient(160deg,#FFE0F5 0%,#E8D5FF 55%,#D5FFE8 100%);align-items:center;padding-top:calc(var(--safe-t) + 24px);padding-bottom:calc(var(--safe-b) + 24px);}
+.troph{font-size:clamp(65px,18vw,95px);animation:bop 1s ease-in-out infinite;}
+.rtitle{font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,7vw,2.4rem);color:var(--pur);margin:8px 0 3px;text-align:center;}
+.rsub{font-size:clamp(.83rem,3.2vw,.97rem);color:var(--txt-l);margin-bottom:13px;text-align:center;}
+.rbox{background:#fff;border-radius:22px;padding:14px 34px;box-shadow:0 8px 24px rgba(155,114,207,.18);margin-bottom:11px;text-align:center;}
+.rbig{font-family:'Fredoka One',cursive;font-size:clamp(2.5rem,10vw,3.5rem);color:var(--pink);}
+.rlbl{font-size:.82rem;color:var(--txt-l);font-weight:800;}
+.rstr{font-size:clamp(1.6rem,6.5vw,2.2rem);margin-bottom:13px;}
+.rwbox{width:min(93%,380px);background:#fff;border-radius:20px;padding:12px;box-shadow:0 4px 14px rgba(155,114,207,.13);margin-bottom:12px;text-align:left;}
+.rwbox h3{font-family:'Fredoka One',cursive;color:var(--pur);font-size:.94rem;margin-bottom:7px;}
+.chip{display:inline-block;padding:4px 10px;border-radius:13px;font-size:.75rem;font-weight:800;margin:3px;}
+.chip-ok{background:#CAFFBF;color:#2A7830;}
+.chip-no{background:#FFADAD;color:#A03030;}
+
+.btnM{width:min(93%,380px);min-height:54px;padding:0 20px;font-family:'Fredoka One',cursive;font-size:clamp(.98rem,4.1vw,1.25rem);color:#fff;background:linear-gradient(135deg,var(--pink),var(--pur));border:none;border-radius:22px;cursor:pointer;box-shadow:0 6px 0 #7A50A8;transition:transform .08s,box-shadow .08s;margin-bottom:11px;touch-action:manipulation;}
+.btnM:active{transform:translateY(4px);box-shadow:0 2px 0 #7A50A8;}
+.btnS{width:min(93%,380px);min-height:48px;padding:0 20px;font-family:'Fredoka One',cursive;font-size:clamp(.9rem,3.7vw,1.08rem);color:var(--pur);background:#fff;border:3px solid var(--pur-l);border-radius:18px;cursor:pointer;box-shadow:0 4px 0 var(--pur-l);transition:transform .08s,box-shadow .08s;margin-bottom:10px;touch-action:manipulation;}
+.btnS:active{transform:translateY(3px);box-shadow:none;}
+.btnT{width:min(93%,380px);min-height:52px;padding:0 20px;font-family:'Fredoka One',cursive;font-size:clamp(.92rem,3.8vw,1.1rem);color:#fff;background:linear-gradient(135deg,var(--mint),#30C5AF);border:none;border-radius:18px;cursor:pointer;box-shadow:0 5px 0 var(--mat-d);transition:transform .08s,box-shadow .08s;margin-bottom:10px;touch-action:manipulation;}
+.btnT:active{transform:translateY(4px);box-shadow:none;}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="bgB"></div>
+<div class="fbo" id="fbo"><div class="fbm" id="fbm"></div></div>
+
+<!-- HOME -->
+<div class="screen active" id="home">
+  <div class="hero">⭐</div>
+  <div class="htitle">Shivani's<br>Exam Prep!</div>
+  <div class="hsub">Grade 3 · Final Term 2 · Pick a subject 🚀</div>
+  <div class="streak-pill" id="strk">🔥 Streak: 0</div>
+  <div class="stats">
+    <div class="sc"><div class="sn" id="hS">0</div><div class="sl">⭐ Stars</div></div>
+    <div class="sc"><div class="sn" id="hR">0</div><div class="sl">🎯 Rounds</div></div>
+    <div class="sc"><div class="sn" id="hL">1</div><div class="sl">🏆 Level</div></div>
+  </div>
+  <div class="xpw">
+    <div class="xpr"><span>⚡ XP</span><span id="xpT">0 / 100</span></div>
+    <div class="xpt"><div class="xpf" id="xpB" style="width:0%"></div></div>
+  </div>
+  <div class="subj-cards">
+    <div class="subj-card sc-eng" onclick="startSubject('english')">
+      <div class="subj-icon">📖</div>
+      <div class="subj-info">
+        <div class="subj-name">English</div>
+        <div class="subj-topics">Prepositions · Suffixes · Pronouns · Contractions · Comprehension</div>
+      </div>
+      <div class="subj-stars" id="eng-stars" style="color:var(--eng)">⭐ 0</div>
+    </div>
+    <div class="subj-card sc-mat" onclick="startSubject('math')">
+      <div class="subj-icon">🔢</div>
+      <div class="subj-info">
+        <div class="subj-name">Maths</div>
+        <div class="subj-topics">Telling Time · Addition & Subtraction · Patterns · ×3 · Division</div>
+      </div>
+      <div class="subj-stars" id="mat-stars" style="color:var(--mat-d)">⭐ 0</div>
+    </div>
+    <div class="subj-card sc-sci" onclick="startSubject('science')">
+      <div class="subj-icon">🔬</div>
+      <div class="subj-info">
+        <div class="subj-name">Science</div>
+        <div class="subj-topics">Shadows · Light · Materials · Animal Groups · Food Chain · Life Cycles</div>
+      </div>
+      <div class="subj-stars" id="sci-stars" style="color:var(--sci)">⭐ 0</div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="screen" id="quiz">
+  <div class="topbar">
+    <button class="backbtn" onclick="go('home')" aria-label="Back">←</button>
+    <div class="pw">
+      <div class="pt"><div class="pf" id="qp" style="width:0%"></div></div>
+      <div class="ptxt" id="qpt">Loading…</div>
+    </div>
+    <div class="subj-badge" id="subj-badge">📖 English</div>
+  </div>
+  <div class="qscroll" id="qscroll">
+    <div class="loading-card" id="loading-card">
+      <div class="spin" id="spin-el"></div>
+      <div class="loading-txt" id="loading-txt">Generating questions…</div>
+      <div class="loading-sub">Making something fun for you ✨</div>
+    </div>
+    <div class="err-card" id="err-card">
+      <div style="font-size:2.5rem;margin-bottom:8px">😔</div>
+      <p style="color:#A03030;font-size:.9rem;font-weight:800;margin-bottom:13px">Couldn't load questions! Check your internet.</p>
+      <button class="btnT" style="width:100%;margin:0" onclick="loadRound()">Try Again 🔄</button>
+    </div>
+    <div id="questions-container"></div>
+  </div>
+  <div class="qact" id="qact" style="display:none;">
+    <button class="btn-skip" onclick="loadRound()" id="skip-btn" title="New round">⏭</button>
+    <button class="btn-submit" id="submit-btn" onclick="submitAll()">Check Answers ✅</button>
+    <button class="btn-next" id="next-btn" onclick="loadRound()">Next Round 🎲</button>
+  </div>
+</div>
+
+<!-- REWARD -->
+<div class="screen" id="reward">
+  <div class="troph" id="r-troph">🏆</div>
+  <div class="rtitle" id="r-title">Great Job!</div>
+  <div class="rsub" id="r-sub">You are amazing! 💖</div>
+  <div class="rbox">
+    <div class="rbig" id="r-score">0/3</div>
+    <div class="rlbl">correct answers ✅</div>
+  </div>
+  <div class="rstr" id="r-stars">⭐⭐⭐</div>
+  <div class="rwbox">
+    <h3>📝 This round:</h3>
+    <div id="r-review"></div>
+  </div>
+  <button class="btnT" onclick="loadRound()">Next Round! 🎲</button>
+  <button class="btnM" onclick="go('home')">Choose Subject 📚</button>
+</div>
+
+<script>
+/* ── STATE ── */
+const SAVE_KEY='shivani_exam_v1';
+let S={xp:0,stars:0,streak:0,rounds:0,lastDate:'',subStars:{english:0,math:0,science:0}};
+function loadState(){try{const d=localStorage.getItem(SAVE_KEY);if(d)Object.assign(S,JSON.parse(d));}catch(e){}}
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(S));}catch(e){}}
+loadState();
+
+/* ── NAVIGATION ── */
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+/* ── BUBBLES ── */
+function makeBubbles(){
+  const c=document.getElementById('bgB'),cols=['#FF6BB0','#9B72CF','#5DD9C1','#FFD166'];
+  for(let i=0;i<12;i++){const el=document.createElement('div');el.className='bub';const sz=28+Math.random()*120;el.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;background:${cols[i%4]};animation-duration:${14+Math.random()*22}s;animation-delay:${Math.random()*14}s;`;c.appendChild(el);}
+}
+
+/* ── CONFETTI ── */
+function confetti(){
+  const cols=['#FF6BB0','#9B72CF','#5DD9C1','#FFD166','#FF9A3C','#fff'];
+  const app=document.getElementById('app');
+  for(let i=0;i<68;i++){const el=document.createElement('div');el.className='cf';const sz=5+Math.random()*9;el.style.cssText=`left:${Math.random()*100}%;background:${cols[~~(Math.random()*cols.length)]};animation-duration:${2+Math.random()*2.5}s;animation-delay:${Math.random()*.9}s;width:${sz}px;height:${sz}px;border-radius:${Math.random()>.5?'50%':'2px'};top:-20px;`;app.appendChild(el);setTimeout(()=>el.remove(),5000);}
+}
+
+/* ── FEEDBACK ── */
+function fb(msg,ok){const o=document.getElementById('fbo'),m=document.getElementById('fbm');m.textContent=msg;m.style.color=ok?'#2A7830':'#B03030';o.classList.add('on');setTimeout(()=>o.classList.remove('on'),1250);}
+
+/* ── HOME UI ── */
+function homeUI(){
+  const today=new Date().toISOString().slice(0,10);
+  if(S.lastDate&&S.lastDate!==today){const diff=(new Date(today)-new Date(S.lastDate))/86400000;if(diff>1.5)S.streak=0;}
+  document.getElementById('strk').textContent='🔥 Streak: '+(S.streak||0);
+  document.getElementById('hS').textContent=S.stars||0;
+  document.getElementById('hR').textContent=S.rounds||0;
+  document.getElementById('hL').textContent=Math.floor((S.xp||0)/100)+1;
+  document.getElementById('xpT').textContent=((S.xp||0)%100)+' / 100';
+  document.getElementById('xpB').style.width=((S.xp||0)%100)+'%';
+  document.getElementById('eng-stars').textContent='⭐ '+(S.subStars.english||0);
+  document.getElementById('mat-stars').textContent='⭐ '+(S.subStars.math||0);
+  document.getElementById('sci-stars').textContent='⭐ '+(S.subStars.science||0);
+}
+
+/* ── SUBJECT CONFIG ── */
+const CFG={
+  english:{label:'📖 English',badgeClass:'sb-eng',cardClass:'eng-card',tbClass:'tb-eng',spinColor:'var(--eng)',loadMsg:'Generating English questions…'},
+  math:{label:'🔢 Maths',badgeClass:'sb-mat',cardClass:'mat-card',tbClass:'tb-mat',spinColor:'var(--mat)',loadMsg:'Generating Maths questions…'},
+  science:{label:'🔬 Science',badgeClass:'sb-sci',cardClass:'sci-card',tbClass:'tb-sci',spinColor:'var(--sci)',loadMsg:'Generating Science questions…'},
+};
+
+/* ── PROMPTS ── */
+function getPrompt(s){
+  const P={
+    english:`You are a fun Grade 3 Cambridge English teacher for an 8-year-old. Generate exactly 3 practice questions mixing different topics.
+Topics pool: prepositions (on/under/in/across/beside), word suffixes (-ly/-er/-ful/-ness making new words), pronouns (replacing a noun in a sentence with he/she/it/we/they), contractions (writing the short form e.g. would not = wouldn't), sentence connectives (joining two sentences with and/but/because/so/or).
+Use a DIFFERENT topic for each question. Do not repeat the same topic twice.
+Return ONLY a valid JSON array, no markdown fences, no explanation, nothing else:
+[{"topic":"Prepositions","type":"mcq","question":"The ball rolled ___ the chair.","options":["under","across","beside","on"],"answer":"under","explanation":"'Under' means directly below. The ball went below the chair."},{"topic":"Pronouns","type":"mcq","question":"Replace the bold noun: Sarah is painting a picture.","options":["He","She","They","It"],"answer":"She","explanation":"Sarah is a girl, so we use 'She'."},{"topic":"Contractions","type":"fill","question":"Write the contraction for: would not","answer":"wouldn't","explanation":"would not = wouldn't. The 'o' in 'not' is replaced with an apostrophe."}]
+Rules: type is mcq or fill. mcq has exactly 4 options. fill has no options field. Keep fun and age-appropriate.`,
+
+    math:`You are a fun Grade 3 Cambridge Maths teacher for an 8-year-old. Generate exactly 3 practice questions mixing different topics.
+Topics pool: telling time (digital to words — under 30 min use "past", over 30 min use "to" e.g. 7:45 = fifteen minutes to eight), 3-digit addition with regrouping, 3-digit subtraction with regrouping, term-to-term number pattern (find the next number), multiplication by 3 (times table), division with remainder.
+Use a DIFFERENT topic for each question.
+Return ONLY a valid JSON array, no markdown fences, no explanation, nothing else:
+[{"topic":"Telling Time","type":"mcq","question":"How do you say 5:30 in words?","options":["thirty minutes past five","thirty minutes to five","five thirty past","half to five"],"answer":"thirty minutes past five","explanation":"5:30 = thirty minutes past five. 30 minutes or less, we say 'past'."},{"topic":"3-Digit Addition","type":"fill","question":"What is 274 + 158?","answer":"432","explanation":"274 + 158: ones 4+8=12 (write 2 carry 1), tens 7+5+1=13 (write 3 carry 1), hundreds 2+1+1=4. Answer: 432."},{"topic":"Number Pattern","type":"fill","question":"Find the next number: 4, 7, 10, 13, ___","answer":"16","explanation":"The pattern adds 3 each time. 13 + 3 = 16."}]
+Rules: type is mcq or fill. mcq has exactly 4 options. fill answer is a number or short phrase. For division write "X remainder Y".`,
+
+    science:`You are a fun Grade 3 Cambridge Science teacher for an 8-year-old. Generate exactly 3 practice questions mixing different topics.
+Topics pool: shadows (closer to light = bigger shadow; light travels in straight line), materials (transparent=clear glass lets all light through; translucent=frosted glass/ice lets some light through; opaque=wood/tissue blocks all light), animal groups (mammals/insects/birds/amphibians/reptiles with examples), food chain (starts with producer/plant then consumer), life cycle of butterfly (egg then caterpillar then chrysalis/pupa then butterfly).
+Use a DIFFERENT topic for each question.
+Return ONLY a valid JSON array, no markdown fences, no explanation, nothing else:
+[{"topic":"Shadows","type":"mcq","question":"A shadow gets BIGGER when the object moves...","options":["Closer to the light source","Further from the light source","Higher up","To the side"],"answer":"Closer to the light source","explanation":"Moving closer to the light blocks more rays, making the shadow bigger."},{"topic":"Animal Groups","type":"mcq","question":"Which animal is an AMPHIBIAN?","options":["Frog","Sparrow","Gecko","Tiger"],"answer":"Frog","explanation":"Frogs are amphibians. They live both in water and on land and have moist skin."},{"topic":"Materials","type":"mcq","question":"Which material is OPAQUE?","options":["Wooden plank","Clear glass","Frosted ice","Tinted window"],"answer":"Wooden plank","explanation":"Opaque materials block all light. You cannot see through a wooden plank."}]
+Rules: type is mcq or fill. mcq has exactly 4 options. fill answer is 1-4 words. Age-appropriate language.`
+  };
+  return P[s];
+}
+
+/* ── QUIZ STATE ── */
+let CUR={subject:'',questions:[],userAnswers:{},answered:false};
+
+function startSubject(subject){
+  CUR.subject=subject;
+  const cfg=CFG[subject];
+  const badge=document.getElementById('subj-badge');
+  badge.textContent=cfg.label; badge.className='subj-badge '+cfg.badgeClass;
+  document.getElementById('spin-el').style.borderTopColor=cfg.spinColor;
+  go('quiz');
+  loadRound();
+}
+
+/* ── LOAD ROUND ── */
+async function loadRound(){
+  CUR.questions=[];CUR.userAnswers={};CUR.answered=false;
+  document.getElementById('questions-container').innerHTML='';
+  document.getElementById('loading-card').style.display='block';
+  document.getElementById('err-card').classList.remove('show');
+  document.getElementById('qact').style.display='none';
+  document.getElementById('submit-btn').style.display='';
+  document.getElementById('next-btn').style.display='none';
+  document.getElementById('skip-btn').style.display='';
+  document.getElementById('qp').style.width='10%';
+  document.getElementById('qpt').textContent='Loading…';
+  document.getElementById('qscroll').scrollTop=0;
+  document.getElementById('loading-txt').textContent=CFG[CUR.subject].loadMsg;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:getPrompt(CUR.subject)}]})
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    const raw=data.content.map(b=>b.text||'').join('');
+    const clean=raw.replace(/```json|```/g,'').trim();
+    const s=clean.indexOf('['),e=clean.lastIndexOf(']')+1;
+    CUR.questions=JSON.parse(clean.slice(s,e));
+    document.getElementById('loading-card').style.display='none';
+    renderQuestions();
+  }catch(err){
+    console.error(err);
+    document.getElementById('loading-card').style.display='none';
+    document.getElementById('err-card').classList.add('show');
+  }
+}
+
+/* ── RENDER ── */
+function renderQuestions(){
+  const wrap=document.getElementById('questions-container');
+  wrap.innerHTML='';
+  const cfg=CFG[CUR.subject];
+  const L=['A','B','C','D'];
+  CUR.questions.forEach((q,i)=>{
+    const card=document.createElement('div');
+    card.className='q-card '+cfg.cardClass;
+    let h=`<div class="q-num">Question ${i+1} of ${CUR.questions.length}</div>
+      <span class="q-type-badge ${cfg.tbClass}">${q.topic}</span>
+      <div class="q-text">${q.question}</div>`;
+    if(q.type==='mcq'){
+      h+=`<div class="q-opts" id="opts-${i}">`;
+      (q.options||[]).forEach((opt,j)=>{
+        const safe=opt.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        h+=`<button class="q-opt" data-val="${safe}" onclick="selOpt(${i},this)"><span class="opt-ltr">${L[j]}</span>${opt}</button>`;
+      });
+      h+=`</div>`;
+    }else{
+      h+=`<input class="fill-inp" id="fill-${i}" type="text" placeholder="Type your answer…" autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')submitAll()">`;
+    }
+    h+=`<div class="q-expl" id="expl-${i}"></div>`;
+    card.innerHTML=h;
+    wrap.appendChild(card);
+  });
+  document.getElementById('qact').style.display='flex';
+  document.getElementById('qp').style.width='30%';
+  document.getElementById('qpt').textContent=CUR.questions.length+' questions';
+}
+
+/* ── SELECT OPTION ── */
+function selOpt(qi,btn){
+  if(CUR.answered)return;
+  document.querySelectorAll('#opts-'+qi+' .q-opt').forEach(b=>{b.style.borderColor='';b.style.background='';b.style.boxShadow='';});
+  const hc={english:'#FF6BB0',math:'#5DD9C1',science:'#9B72CF'};
+  btn.style.borderColor=hc[CUR.subject];
+  CUR.userAnswers[qi]=btn.getAttribute('data-val');
+}
+
+/* ── SUBMIT ── */
+function submitAll(){
+  if(CUR.answered||!CUR.questions.length)return;
+  CUR.answered=true;
+  let correct=0;
+  CUR.questions.forEach((q,i)=>{
+    let ua='';
+    if(q.type==='mcq'){
+      ua=CUR.userAnswers[i]||'';
+      document.querySelectorAll('#opts-'+i+' .q-opt').forEach(b=>{
+        b.onclick=null;b.style.borderColor='';b.style.background='';b.style.boxShadow='';
+        if(b.getAttribute('data-val')===q.answer)b.classList.add('ok');
+        else if(b.getAttribute('data-val')===ua&&ua!==q.answer)b.classList.add('no');
+      });
+    }else{
+      const inp=document.getElementById('fill-'+i);
+      ua=(inp?inp.value:'').trim();
+      if(inp){inp.disabled=true;inp.classList.add(norm(ua)===norm(q.answer)?'ok':'no');}
+    }
+    const ok=norm(ua)===norm(q.answer);
+    if(ok)correct++;
+    const expl=document.getElementById('expl-'+i);
+    if(expl){expl.className='q-expl show '+(ok?'expl-ok':'expl-no');expl.textContent=(ok?'✅ ':'❌ Correct: "'+q.answer+'". ')+q.explanation;}
+  });
+
+  document.getElementById('qp').style.width='100%';
+  document.getElementById('submit-btn').style.display='none';
+  document.getElementById('next-btn').style.display='';
+  document.getElementById('skip-btn').style.display='none';
+
+  // Update state
+  const today=new Date().toISOString().slice(0,10);
+  S.stars=(S.stars||0)+correct;
+  S.rounds=(S.rounds||0)+1;
+  S.xp=(S.xp||0)+(correct*15)+(correct===CUR.questions.length?20:0);
+  S.subStars[CUR.subject]=(S.subStars[CUR.subject]||0)+correct;
+  if(!S.lastDate||(new Date(today)-new Date(S.lastDate))<172800000){
+    if(S.lastDate!==today){S.streak=(S.streak||0)+1;S.lastDate=today;}
+  }else{S.streak=1;S.lastDate=today;}
+  save();homeUI();
+
+  const pct=correct/CUR.questions.length;
+  fb(pct===1?'🎉 Perfect! Amazing!':pct>=0.67?'💖 Well done!':'💪 Keep practising!',pct>=0.67);
+  setTimeout(()=>showReward(correct),650);
+}
+
+function norm(s){return (s||'').toLowerCase().replace(/[^a-z0-9]/g,'').trim();}
+
+/* ── REWARD ── */
+function showReward(correct){
+  const total=CUR.questions.length,pct=correct/total;
+  const T=['😢','💪','😊','🌟','🏆'];
+  const TIT=['Keep Trying!','Good Try!','Well Done!','Almost Perfect!','PERFECT!'];
+  const SUB=[
+    ['You can do it, Shivani! 🌟','Practice makes perfect! 💪'],
+    ['Getting better every time! 😊','Try the next round! 🎲'],
+    ['Great work, keep going! 💖','You\'re improving so much! 🌈'],
+    ['Nearly there — amazing! ⭐','One more round! 🔥'],
+    ['YOU ARE A STAR! 🌟💖','Every answer right! 🎉'],
+  ];
+  const idx=Math.min(4,Math.round(pct*4));
+  document.getElementById('r-troph').textContent=T[idx];
+  document.getElementById('r-title').textContent=TIT[idx];
+  document.getElementById('r-score').textContent=correct+'/'+total;
+  document.getElementById('r-sub').textContent=SUB[idx][~~(Math.random()*2)];
+  document.getElementById('r-stars').textContent=pct===1?'⭐⭐⭐':pct>=0.67?'⭐⭐':'⭐';
+  const rev=document.getElementById('r-review');
+  rev.innerHTML='';
+  CUR.questions.forEach((q,i)=>{
+    let ua=CUR.userAnswers[i]||'';
+    if(q.type==='fill'){const inp=document.getElementById('fill-'+i);ua=inp?inp.value.trim():'';}
+    const ok=norm(ua)===norm(q.answer);
+    const chip=document.createElement('span');
+    chip.className='chip '+(ok?'chip-ok':'chip-no');
+    chip.textContent=(ok?'✅ ':'❌ ')+q.topic;
+    rev.appendChild(chip);
+  });
+  go('reward');
+  if(pct===1)setTimeout(confetti,80);
+}
+
+/* ── INIT ── */
+makeBubbles();
+homeUI();
+try{window.parent.postMessage({height:900},'*');}catch(e){}
+</script>
+</div>
+</body>
+</html>
